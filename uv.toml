@@ -1,0 +1,3 @@
+# Install only releases at least 7 days old, and pin exact versions on `uv add`.
+exclude-newer = "7 days"
+add-bounds = "exact"
