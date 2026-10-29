@@ -31,6 +31,13 @@ def test_optional_tool_that_is_missing_is_reported_and_skipped(capsys, monkeypat
     assert "SKIPPED: no-such-linter" in capsys.readouterr().out
 
 
+def test_action_result_names_the_tools_that_did_not_run(capsys, monkeypatch) -> None:
+    """Check that a result with skipped linters does not look like a full pass."""
+    monkeypatch.setitem(menu.OPTIONAL_TOOLS, "no-such-linter", "install it")
+    assert menu.run_action(menu.Action("Lint", "about", (("no-such-linter",),))) is True
+    assert "PASSED: Lint (not run: no-such-linter)" in capsys.readouterr().out
+
+
 def test_action_replaces_the_channel_and_rejects_an_empty_one(monkeypatch, tmp_path) -> None:
     """Check that the typed COM port reaches the command, and that an empty one stops the action."""
     output = tmp_path / "channel"
