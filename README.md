@@ -6,6 +6,8 @@ A hardware-in-the-loop bench for a safety-inspired vehicle ECU. A Python 3D driv
 
 ## Build and test (PC only)
 Needs Python 3.14, uv, CMake, Ninja and a host GCC.
+
+On Windows, `run.bat` opens a menu with these commands. To run them by hand:
 ```
 git submodule update --init
 uv sync

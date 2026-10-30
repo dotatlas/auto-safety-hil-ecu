@@ -9,7 +9,7 @@ dependencies = [
 ]
 
 [tool.pytest.ini_options]
-pythonpath = ["."]
+pythonpath = [".", "tools"]
 testpaths = ["tests"]
 addopts = "--strict-markers"
 markers = [
