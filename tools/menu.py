@@ -161,7 +161,9 @@ def run_action(action: Action) -> bool:
             tuple(channel if part == CHANNEL else part for part in command) for command in commands
         )
     passed = run_commands(commands)
-    print(f"\n{'PASSED' if passed else 'FAILED'}: {action.name}")
+    skipped = [c[0] for c in commands if c[0] in OPTIONAL_TOOLS and shutil.which(c[0]) is None]
+    not_run = f" (not run: {', '.join(skipped)})" if skipped else ""
+    print(f"\n{'PASSED' if passed else 'FAILED'}: {action.name}{not_run}")
     return passed
 
 
