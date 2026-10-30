@@ -4,5 +4,17 @@ A hardware-in-the-loop bench for a safety-inspired vehicle ECU. A Python 3D driv
 
 > **Not a production safety system.** This is an educational project. It borrows ideas from automotive functional safety (watchdogs, degraded modes, plausibility checks, deterministic state machines). It does not claim ISO 26262 or MISRA compliance, and it controls only a simulated vehicle.
 
+## Build and test (PC only)
+Needs Python 3.14, uv, CMake, Ninja and a host GCC.
+```
+git submodule update --init
+uv sync
+cmake -S firmware/tests -B build/host -G Ninja
+cmake --build build/host
+ctest --test-dir build/host --output-on-failure
+uv run pytest -m "not hil"
+uv run python -m hilsim echo --bus sil
+```
+
 ## License
 MIT, see [LICENSE](LICENSE). Third-party code (STM32Cube HAL, CMSIS, FreeRTOS, FatFs, Unity) keeps its own license.
