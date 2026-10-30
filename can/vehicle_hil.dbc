@@ -1,0 +1,26 @@
+VERSION ""
+
+NS_ :
+
+BS_:
+
+BU_: SIM ECU
+
+BO_ 256 VehicleState: 8 SIM
+ SG_ vehicle_speed_mps : 0|16@1+ (0.01,0) [0|655.35] "m/s" ECU
+ SG_ longitudinal_accel_mps2 : 16|16@1- (0.01,0) [-50|50] "m/s2" ECU
+ SG_ steering_angle_deg : 32|12@1- (0.1,0) [-200|200] "deg" ECU
+ SG_ gear_state : 44|4@1+ (1,0) [0|3] "" ECU
+ SG_ alive_counter : 48|4@1+ (1,0) [0|15] "" ECU
+ SG_ crc8 : 56|8@1+ (1,0) [0|255] "" ECU
+
+BO_ 512 SafetyCommand: 8 ECU
+ SG_ brake_request_percent : 0|8@1+ (1,0) [0|100] "%" SIM
+ SG_ safety_state : 8|4@1+ (1,0) [0|3] "" SIM
+ SG_ emergency_brake_active : 12|1@1+ (1,0) [0|1] "" SIM
+ SG_ fault_code : 16|16@1+ (1,0) [0|65535] "" SIM
+ SG_ alive_counter : 48|4@1+ (1,0) [0|15] "" SIM
+ SG_ crc8 : 56|8@1+ (1,0) [0|255] "" SIM
+
+VAL_ 256 gear_state 0 "PARK" 1 "REVERSE" 2 "NEUTRAL" 3 "DRIVE" ;
+VAL_ 512 safety_state 0 "NORMAL" 1 "WARNING" 2 "DEGRADED" 3 "EMERGENCY_BRAKE" ;

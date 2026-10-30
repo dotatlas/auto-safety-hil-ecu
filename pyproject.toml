@@ -1,0 +1,35 @@
+[project]
+name = "auto-safety-hil-ecu"
+version = "0.1.0"
+description = "HIL bench: a Python vehicle simulator and an STM32 safety ECU on a real CAN bus"
+requires-python = "==3.14.*"
+dependencies = [
+    "cantools==45.1.0",
+    "python-can[seeedstudio]==4.6.1",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "--strict-markers"
+markers = [
+    "sil: runs against the host-built ECU core",
+    "hil: runs against the real board over CAN",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+extend-exclude = ["firmware"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.isort]
+known-third-party = ["can"]
+
+[dependency-groups]
+dev = [
+    "pytest==9.1.1",
+    "ruff==0.17.2",
+]
