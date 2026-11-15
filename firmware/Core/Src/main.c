@@ -24,7 +24,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "rtos_app.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -121,6 +121,8 @@ int main(void)
 
   /* -- Sample board code to switch on led ---- */
   BSP_LED_On(LED_GREEN);
+
+  rtos_start();
 
   /* USER CODE END BSP */
 

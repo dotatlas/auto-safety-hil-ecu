@@ -43,13 +43,24 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 )
 
 # Add sources to executable
+set(FREERTOS_DIR ${CMAKE_SOURCE_DIR}/third_party/FreeRTOS-Kernel)
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
+    ${FREERTOS_DIR}/tasks.c
+    ${FREERTOS_DIR}/list.c
+    ${FREERTOS_DIR}/queue.c
+    ${FREERTOS_DIR}/portable/GCC/ARM_CM4F/port.c
+    rtos/rtos_app.c
 )
+
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
+    rtos
+    ${FREERTOS_DIR}/include
+    ${FREERTOS_DIR}/portable/GCC/ARM_CM4F
+
 )
 
 # Add project symbols (macros)
