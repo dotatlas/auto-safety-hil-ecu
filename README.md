@@ -1,22 +1,8 @@
 # auto-safety-hil-ecu
 
-A hardware-in-the-loop bench for a safety-inspired vehicle ECU. A Python 3D driving simulator talks over a real CAN bus to an STM32G474 running FreeRTOS. The ECU checks the incoming sensor data and decides whether to brake.
+A learning project: a simulated car on a PC talks to a real microcontroller over a car network. The microcontroller acts as a safety computer. It checks what it hears and decides when to step in. The simulator is also a place to train driving software, with the safety computer always having the final say.
 
-> **Not a production safety system.** This is an educational project. It borrows ideas from automotive functional safety (watchdogs, degraded modes, plausibility checks, deterministic state machines). It does not claim ISO 26262 or MISRA compliance, and it controls only a simulated vehicle.
-
-## Build and test (PC only)
-Needs Python 3.14, uv, CMake, Ninja and a host GCC.
-
-On Windows, `run.bat` opens a menu with these commands. To run them by hand:
-```
-git submodule update --init
-uv sync
-cmake -S firmware/tests -B build/host -G Ninja
-cmake --build build/host
-ctest --test-dir build/host --output-on-failure
-uv run pytest -m "not hil"
-uv run python -m hilsim echo --bus sil
-```
+> **Not a real safety system.** This is for learning only. It borrows ideas from car safety engineering, but claims no safety standard, and it controls only a simulated car.
 
 ## License
-MIT, see [LICENSE](LICENSE). Third-party code (STM32Cube HAL, CMSIS, FreeRTOS, FatFs, Unity) keeps its own license.
+MIT, see [LICENSE](LICENSE). Third-party code keeps its own license.
