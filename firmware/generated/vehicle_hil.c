@@ -49,6 +49,22 @@ static inline uint8_t pack_left_shift_u16(
     return (uint8_t)((uint8_t)(value << shift) & mask);
 }
 
+static inline uint8_t pack_left_shift_u32(
+    uint32_t value,
+    uint8_t shift,
+    uint8_t mask)
+{
+    return (uint8_t)((uint8_t)(value << shift) & mask);
+}
+
+static inline uint8_t pack_right_shift_u8(
+    uint8_t value,
+    uint8_t shift,
+    uint8_t mask)
+{
+    return (uint8_t)((uint8_t)(value >> shift) & mask);
+}
+
 static inline uint8_t pack_right_shift_u16(
     uint16_t value,
     uint8_t shift,
@@ -57,12 +73,36 @@ static inline uint8_t pack_right_shift_u16(
     return (uint8_t)((uint8_t)(value >> shift) & mask);
 }
 
+static inline uint8_t pack_right_shift_u32(
+    uint32_t value,
+    uint8_t shift,
+    uint8_t mask)
+{
+    return (uint8_t)((uint8_t)(value >> shift) & mask);
+}
+
+static inline uint8_t unpack_left_shift_u8(
+    uint8_t value,
+    uint8_t shift,
+    uint8_t mask)
+{
+    return (uint8_t)((uint8_t)(value & mask) << shift);
+}
+
 static inline uint16_t unpack_left_shift_u16(
     uint8_t value,
     uint8_t shift,
     uint8_t mask)
 {
     return (uint16_t)((uint16_t)(value & mask) << shift);
+}
+
+static inline uint32_t unpack_left_shift_u32(
+    uint8_t value,
+    uint8_t shift,
+    uint8_t mask)
+{
+    return (uint32_t)((uint32_t)(value & mask) << shift);
 }
 
 static inline uint8_t unpack_right_shift_u8(
@@ -81,6 +121,14 @@ static inline uint16_t unpack_right_shift_u16(
     return (uint16_t)((uint16_t)(value & mask) >> shift);
 }
 
+static inline uint32_t unpack_right_shift_u32(
+    uint8_t value,
+    uint8_t shift,
+    uint8_t mask)
+{
+    return (uint32_t)((uint32_t)(value & mask) >> shift);
+}
+
 static uint64_t cantools_unsigned_from_double(double value)
 {
     if (value < 0) {
@@ -96,7 +144,7 @@ int vehicle_hil_vehicle_state_pack(
     size_t size)
 {
     uint16_t longitudinal_accel_mps2;
-    uint16_t steering_angle_deg;
+    uint16_t steering_angle_rad;
 
     if (size < 8u) {
         return (-EINVAL);
@@ -109,9 +157,9 @@ int vehicle_hil_vehicle_state_pack(
     longitudinal_accel_mps2 = (uint16_t)src_p->longitudinal_accel_mps2;
     dst_p[2] |= pack_left_shift_u16(longitudinal_accel_mps2, 0u, 0xffu);
     dst_p[3] |= pack_right_shift_u16(longitudinal_accel_mps2, 8u, 0xffu);
-    steering_angle_deg = (uint16_t)src_p->steering_angle_deg;
-    dst_p[4] |= pack_left_shift_u16(steering_angle_deg, 0u, 0xffu);
-    dst_p[5] |= pack_right_shift_u16(steering_angle_deg, 8u, 0x0fu);
+    steering_angle_rad = (uint16_t)src_p->steering_angle_rad;
+    dst_p[4] |= pack_left_shift_u16(steering_angle_rad, 0u, 0xffu);
+    dst_p[5] |= pack_right_shift_u16(steering_angle_rad, 8u, 0x0fu);
     dst_p[5] |= pack_left_shift_u8(src_p->gear_state, 4u, 0xf0u);
     dst_p[6] |= pack_left_shift_u8(src_p->alive_counter, 0u, 0x0fu);
     dst_p[7] |= pack_left_shift_u8(src_p->crc8, 0u, 0xffu);
@@ -125,7 +173,7 @@ int vehicle_hil_vehicle_state_unpack(
     size_t size)
 {
     uint16_t longitudinal_accel_mps2;
-    uint16_t steering_angle_deg;
+    uint16_t steering_angle_rad;
 
     if (size < 8u) {
         return (-EINVAL);
@@ -136,14 +184,14 @@ int vehicle_hil_vehicle_state_unpack(
     longitudinal_accel_mps2 = unpack_right_shift_u16(src_p[2], 0u, 0xffu);
     longitudinal_accel_mps2 |= unpack_left_shift_u16(src_p[3], 8u, 0xffu);
     dst_p->longitudinal_accel_mps2 = (int16_t)longitudinal_accel_mps2;
-    steering_angle_deg = unpack_right_shift_u16(src_p[4], 0u, 0xffu);
-    steering_angle_deg |= unpack_left_shift_u16(src_p[5], 8u, 0x0fu);
+    steering_angle_rad = unpack_right_shift_u16(src_p[4], 0u, 0xffu);
+    steering_angle_rad |= unpack_left_shift_u16(src_p[5], 8u, 0x0fu);
 
-    if ((steering_angle_deg & (1u << 11)) != 0u) {
-        steering_angle_deg |= 0xf000u;
+    if ((steering_angle_rad & (1u << 11)) != 0u) {
+        steering_angle_rad |= 0xf000u;
     }
 
-    dst_p->steering_angle_deg = (int16_t)steering_angle_deg;
+    dst_p->steering_angle_rad = (int16_t)steering_angle_rad;
     dst_p->gear_state = unpack_right_shift_u8(src_p[5], 4u, 0xf0u);
     dst_p->alive_counter = unpack_right_shift_u8(src_p[6], 0u, 0x0fu);
     dst_p->crc8 = unpack_right_shift_u8(src_p[7], 0u, 0xffu);
@@ -160,14 +208,14 @@ int vehicle_hil_vehicle_state_init(struct vehicle_hil_vehicle_state_t *msg_p)
     return 0;
 }
 
-uint16_t vehicle_hil_vehicle_state_vehicle_speed_mps_encode(double value)
+uint16_t vehicle_hil_vehicle_state_vehicle_speed_mps_encode(float value)
 {
-    return (uint16_t)(cantools_unsigned_from_double(value / 0.01));
+    return (uint16_t)(cantools_unsigned_from_double(value / 0.01f));
 }
 
-double vehicle_hil_vehicle_state_vehicle_speed_mps_decode(uint16_t value)
+float vehicle_hil_vehicle_state_vehicle_speed_mps_decode(uint16_t value)
 {
-    return ((double)value * 0.01);
+    return ((float)value * 0.01f);
 }
 
 bool vehicle_hil_vehicle_state_vehicle_speed_mps_is_in_range(uint16_t value)
@@ -177,19 +225,19 @@ bool vehicle_hil_vehicle_state_vehicle_speed_mps_is_in_range(uint16_t value)
     return (true);
 }
 
-bool vehicle_hil_vehicle_state_vehicle_speed_mps_is_in_phys_range(double value)
+bool vehicle_hil_vehicle_state_vehicle_speed_mps_is_in_phys_range(float value)
 {
-    return ((value >= 0.0) && (value <= 655.35));
+    return ((value >= 0.0f) && (value <= 655.35f));
 }
 
-int16_t vehicle_hil_vehicle_state_longitudinal_accel_mps2_encode(double value)
+int16_t vehicle_hil_vehicle_state_longitudinal_accel_mps2_encode(float value)
 {
-    return (int16_t)(value / 0.01);
+    return (int16_t)(value / 0.01f);
 }
 
-double vehicle_hil_vehicle_state_longitudinal_accel_mps2_decode(int16_t value)
+float vehicle_hil_vehicle_state_longitudinal_accel_mps2_decode(int16_t value)
 {
-    return ((double)value * 0.01);
+    return ((float)value * 0.01f);
 }
 
 bool vehicle_hil_vehicle_state_longitudinal_accel_mps2_is_in_range(int16_t value)
@@ -197,39 +245,39 @@ bool vehicle_hil_vehicle_state_longitudinal_accel_mps2_is_in_range(int16_t value
     return ((value >= -5000) && (value <= 5000));
 }
 
-bool vehicle_hil_vehicle_state_longitudinal_accel_mps2_is_in_phys_range(double value)
+bool vehicle_hil_vehicle_state_longitudinal_accel_mps2_is_in_phys_range(float value)
 {
-    return ((value >= -50.0) && (value <= 50.0));
+    return ((value >= -50.0f) && (value <= 50.0f));
 }
 
-int16_t vehicle_hil_vehicle_state_steering_angle_deg_encode(double value)
+int16_t vehicle_hil_vehicle_state_steering_angle_rad_encode(float value)
 {
-    return (int16_t)(value / 0.1);
+    return (int16_t)(value / 0.001f);
 }
 
-double vehicle_hil_vehicle_state_steering_angle_deg_decode(int16_t value)
+float vehicle_hil_vehicle_state_steering_angle_rad_decode(int16_t value)
 {
-    return ((double)value * 0.1);
+    return ((float)value * 0.001f);
 }
 
-bool vehicle_hil_vehicle_state_steering_angle_deg_is_in_range(int16_t value)
+bool vehicle_hil_vehicle_state_steering_angle_rad_is_in_range(int16_t value)
 {
     return ((value >= -2000) && (value <= 2000));
 }
 
-bool vehicle_hil_vehicle_state_steering_angle_deg_is_in_phys_range(double value)
+bool vehicle_hil_vehicle_state_steering_angle_rad_is_in_phys_range(float value)
 {
-    return ((value >= -200.0) && (value <= 200.0));
+    return ((value >= -2.0f) && (value <= 2.0f));
 }
 
-uint8_t vehicle_hil_vehicle_state_gear_state_encode(double value)
+uint8_t vehicle_hil_vehicle_state_gear_state_encode(float value)
 {
     return (uint8_t)(cantools_unsigned_from_double(value));
 }
 
-double vehicle_hil_vehicle_state_gear_state_decode(uint8_t value)
+float vehicle_hil_vehicle_state_gear_state_decode(uint8_t value)
 {
-    return ((double)value);
+    return ((float)value);
 }
 
 bool vehicle_hil_vehicle_state_gear_state_is_in_range(uint8_t value)
@@ -237,19 +285,19 @@ bool vehicle_hil_vehicle_state_gear_state_is_in_range(uint8_t value)
     return (value <= 3u);
 }
 
-bool vehicle_hil_vehicle_state_gear_state_is_in_phys_range(double value)
+bool vehicle_hil_vehicle_state_gear_state_is_in_phys_range(float value)
 {
-    return ((value >= 0.0) && (value <= 3.0));
+    return ((value >= 0.0f) && (value <= 3.0f));
 }
 
-uint8_t vehicle_hil_vehicle_state_alive_counter_encode(double value)
+uint8_t vehicle_hil_vehicle_state_alive_counter_encode(float value)
 {
     return (uint8_t)(cantools_unsigned_from_double(value));
 }
 
-double vehicle_hil_vehicle_state_alive_counter_decode(uint8_t value)
+float vehicle_hil_vehicle_state_alive_counter_decode(uint8_t value)
 {
-    return ((double)value);
+    return ((float)value);
 }
 
 bool vehicle_hil_vehicle_state_alive_counter_is_in_range(uint8_t value)
@@ -257,19 +305,19 @@ bool vehicle_hil_vehicle_state_alive_counter_is_in_range(uint8_t value)
     return (value <= 15u);
 }
 
-bool vehicle_hil_vehicle_state_alive_counter_is_in_phys_range(double value)
+bool vehicle_hil_vehicle_state_alive_counter_is_in_phys_range(float value)
 {
-    return ((value >= 0.0) && (value <= 15.0));
+    return ((value >= 0.0f) && (value <= 15.0f));
 }
 
-uint8_t vehicle_hil_vehicle_state_crc8_encode(double value)
+uint8_t vehicle_hil_vehicle_state_crc8_encode(float value)
 {
     return (uint8_t)(cantools_unsigned_from_double(value));
 }
 
-double vehicle_hil_vehicle_state_crc8_decode(uint8_t value)
+float vehicle_hil_vehicle_state_crc8_decode(uint8_t value)
 {
-    return ((double)value);
+    return ((float)value);
 }
 
 bool vehicle_hil_vehicle_state_crc8_is_in_range(uint8_t value)
@@ -279,9 +327,974 @@ bool vehicle_hil_vehicle_state_crc8_is_in_range(uint8_t value)
     return (true);
 }
 
-bool vehicle_hil_vehicle_state_crc8_is_in_phys_range(double value)
+bool vehicle_hil_vehicle_state_crc8_is_in_phys_range(float value)
 {
-    return ((value >= 0.0) && (value <= 255.0));
+    return ((value >= 0.0f) && (value <= 255.0f));
+}
+
+int vehicle_hil_wheel_speed_pack(
+    uint8_t *dst_p,
+    const struct vehicle_hil_wheel_speed_t *src_p,
+    size_t size)
+{
+    if (size < 8u) {
+        return (-EINVAL);
+    }
+
+    memset(&dst_p[0], 0, 8);
+
+    dst_p[0] |= pack_left_shift_u16(src_p->wheel_fl_mps, 0u, 0xffu);
+    dst_p[1] |= pack_right_shift_u16(src_p->wheel_fl_mps, 8u, 0x0fu);
+    dst_p[1] |= pack_left_shift_u16(src_p->wheel_fr_mps, 4u, 0xf0u);
+    dst_p[2] |= pack_right_shift_u16(src_p->wheel_fr_mps, 4u, 0xffu);
+    dst_p[3] |= pack_left_shift_u16(src_p->wheel_rl_mps, 0u, 0xffu);
+    dst_p[4] |= pack_right_shift_u16(src_p->wheel_rl_mps, 8u, 0x0fu);
+    dst_p[4] |= pack_left_shift_u16(src_p->wheel_rr_mps, 4u, 0xf0u);
+    dst_p[5] |= pack_right_shift_u16(src_p->wheel_rr_mps, 4u, 0xffu);
+    dst_p[6] |= pack_left_shift_u8(src_p->alive_counter, 0u, 0x0fu);
+    dst_p[7] |= pack_left_shift_u8(src_p->crc8, 0u, 0xffu);
+
+    return (8);
+}
+
+int vehicle_hil_wheel_speed_unpack(
+    struct vehicle_hil_wheel_speed_t *dst_p,
+    const uint8_t *src_p,
+    size_t size)
+{
+    if (size < 8u) {
+        return (-EINVAL);
+    }
+
+    dst_p->wheel_fl_mps = unpack_right_shift_u16(src_p[0], 0u, 0xffu);
+    dst_p->wheel_fl_mps |= unpack_left_shift_u16(src_p[1], 8u, 0x0fu);
+    dst_p->wheel_fr_mps = unpack_right_shift_u16(src_p[1], 4u, 0xf0u);
+    dst_p->wheel_fr_mps |= unpack_left_shift_u16(src_p[2], 4u, 0xffu);
+    dst_p->wheel_rl_mps = unpack_right_shift_u16(src_p[3], 0u, 0xffu);
+    dst_p->wheel_rl_mps |= unpack_left_shift_u16(src_p[4], 8u, 0x0fu);
+    dst_p->wheel_rr_mps = unpack_right_shift_u16(src_p[4], 4u, 0xf0u);
+    dst_p->wheel_rr_mps |= unpack_left_shift_u16(src_p[5], 4u, 0xffu);
+    dst_p->alive_counter = unpack_right_shift_u8(src_p[6], 0u, 0x0fu);
+    dst_p->crc8 = unpack_right_shift_u8(src_p[7], 0u, 0xffu);
+
+    return (0);
+}
+
+int vehicle_hil_wheel_speed_init(struct vehicle_hil_wheel_speed_t *msg_p)
+{
+    if (msg_p == NULL) return -1;
+
+    memset(msg_p, 0, sizeof(struct vehicle_hil_wheel_speed_t));
+
+    return 0;
+}
+
+uint16_t vehicle_hil_wheel_speed_wheel_fl_mps_encode(float value)
+{
+    return (uint16_t)(cantools_unsigned_from_double(value / 0.02f));
+}
+
+float vehicle_hil_wheel_speed_wheel_fl_mps_decode(uint16_t value)
+{
+    return ((float)value * 0.02f);
+}
+
+bool vehicle_hil_wheel_speed_wheel_fl_mps_is_in_range(uint16_t value)
+{
+    return (value <= 4095u);
+}
+
+bool vehicle_hil_wheel_speed_wheel_fl_mps_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 81.9f));
+}
+
+uint16_t vehicle_hil_wheel_speed_wheel_fr_mps_encode(float value)
+{
+    return (uint16_t)(cantools_unsigned_from_double(value / 0.02f));
+}
+
+float vehicle_hil_wheel_speed_wheel_fr_mps_decode(uint16_t value)
+{
+    return ((float)value * 0.02f);
+}
+
+bool vehicle_hil_wheel_speed_wheel_fr_mps_is_in_range(uint16_t value)
+{
+    return (value <= 4095u);
+}
+
+bool vehicle_hil_wheel_speed_wheel_fr_mps_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 81.9f));
+}
+
+uint16_t vehicle_hil_wheel_speed_wheel_rl_mps_encode(float value)
+{
+    return (uint16_t)(cantools_unsigned_from_double(value / 0.02f));
+}
+
+float vehicle_hil_wheel_speed_wheel_rl_mps_decode(uint16_t value)
+{
+    return ((float)value * 0.02f);
+}
+
+bool vehicle_hil_wheel_speed_wheel_rl_mps_is_in_range(uint16_t value)
+{
+    return (value <= 4095u);
+}
+
+bool vehicle_hil_wheel_speed_wheel_rl_mps_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 81.9f));
+}
+
+uint16_t vehicle_hil_wheel_speed_wheel_rr_mps_encode(float value)
+{
+    return (uint16_t)(cantools_unsigned_from_double(value / 0.02f));
+}
+
+float vehicle_hil_wheel_speed_wheel_rr_mps_decode(uint16_t value)
+{
+    return ((float)value * 0.02f);
+}
+
+bool vehicle_hil_wheel_speed_wheel_rr_mps_is_in_range(uint16_t value)
+{
+    return (value <= 4095u);
+}
+
+bool vehicle_hil_wheel_speed_wheel_rr_mps_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 81.9f));
+}
+
+uint8_t vehicle_hil_wheel_speed_alive_counter_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_wheel_speed_alive_counter_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_wheel_speed_alive_counter_is_in_range(uint8_t value)
+{
+    return (value <= 15u);
+}
+
+bool vehicle_hil_wheel_speed_alive_counter_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 15.0f));
+}
+
+uint8_t vehicle_hil_wheel_speed_crc8_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_wheel_speed_crc8_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_wheel_speed_crc8_is_in_range(uint8_t value)
+{
+    (void)value;
+
+    return (true);
+}
+
+bool vehicle_hil_wheel_speed_crc8_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 255.0f));
+}
+
+int vehicle_hil_imu_data_pack(
+    uint8_t *dst_p,
+    const struct vehicle_hil_imu_data_t *src_p,
+    size_t size)
+{
+    uint16_t accel_x_mps2;
+    uint16_t accel_y_mps2;
+    uint16_t yaw_rate_radps;
+
+    if (size < 8u) {
+        return (-EINVAL);
+    }
+
+    memset(&dst_p[0], 0, 8);
+
+    accel_x_mps2 = (uint16_t)src_p->accel_x_mps2;
+    dst_p[0] |= pack_left_shift_u16(accel_x_mps2, 0u, 0xffu);
+    dst_p[1] |= pack_right_shift_u16(accel_x_mps2, 8u, 0xffu);
+    accel_y_mps2 = (uint16_t)src_p->accel_y_mps2;
+    dst_p[2] |= pack_left_shift_u16(accel_y_mps2, 0u, 0xffu);
+    dst_p[3] |= pack_right_shift_u16(accel_y_mps2, 8u, 0xffu);
+    yaw_rate_radps = (uint16_t)src_p->yaw_rate_radps;
+    dst_p[4] |= pack_left_shift_u16(yaw_rate_radps, 0u, 0xffu);
+    dst_p[5] |= pack_right_shift_u16(yaw_rate_radps, 8u, 0x0fu);
+    dst_p[5] |= pack_left_shift_u8(src_p->imu_valid, 4u, 0x10u);
+    dst_p[6] |= pack_left_shift_u8(src_p->alive_counter, 0u, 0x0fu);
+    dst_p[7] |= pack_left_shift_u8(src_p->crc8, 0u, 0xffu);
+
+    return (8);
+}
+
+int vehicle_hil_imu_data_unpack(
+    struct vehicle_hil_imu_data_t *dst_p,
+    const uint8_t *src_p,
+    size_t size)
+{
+    uint16_t accel_x_mps2;
+    uint16_t accel_y_mps2;
+    uint16_t yaw_rate_radps;
+
+    if (size < 8u) {
+        return (-EINVAL);
+    }
+
+    accel_x_mps2 = unpack_right_shift_u16(src_p[0], 0u, 0xffu);
+    accel_x_mps2 |= unpack_left_shift_u16(src_p[1], 8u, 0xffu);
+    dst_p->accel_x_mps2 = (int16_t)accel_x_mps2;
+    accel_y_mps2 = unpack_right_shift_u16(src_p[2], 0u, 0xffu);
+    accel_y_mps2 |= unpack_left_shift_u16(src_p[3], 8u, 0xffu);
+    dst_p->accel_y_mps2 = (int16_t)accel_y_mps2;
+    yaw_rate_radps = unpack_right_shift_u16(src_p[4], 0u, 0xffu);
+    yaw_rate_radps |= unpack_left_shift_u16(src_p[5], 8u, 0x0fu);
+
+    if ((yaw_rate_radps & (1u << 11)) != 0u) {
+        yaw_rate_radps |= 0xf000u;
+    }
+
+    dst_p->yaw_rate_radps = (int16_t)yaw_rate_radps;
+    dst_p->imu_valid = unpack_right_shift_u8(src_p[5], 4u, 0x10u);
+    dst_p->alive_counter = unpack_right_shift_u8(src_p[6], 0u, 0x0fu);
+    dst_p->crc8 = unpack_right_shift_u8(src_p[7], 0u, 0xffu);
+
+    return (0);
+}
+
+int vehicle_hil_imu_data_init(struct vehicle_hil_imu_data_t *msg_p)
+{
+    if (msg_p == NULL) return -1;
+
+    memset(msg_p, 0, sizeof(struct vehicle_hil_imu_data_t));
+
+    return 0;
+}
+
+int16_t vehicle_hil_imu_data_accel_x_mps2_encode(float value)
+{
+    return (int16_t)(value / 0.01f);
+}
+
+float vehicle_hil_imu_data_accel_x_mps2_decode(int16_t value)
+{
+    return ((float)value * 0.01f);
+}
+
+bool vehicle_hil_imu_data_accel_x_mps2_is_in_range(int16_t value)
+{
+    return ((value >= -5000) && (value <= 5000));
+}
+
+bool vehicle_hil_imu_data_accel_x_mps2_is_in_phys_range(float value)
+{
+    return ((value >= -50.0f) && (value <= 50.0f));
+}
+
+int16_t vehicle_hil_imu_data_accel_y_mps2_encode(float value)
+{
+    return (int16_t)(value / 0.01f);
+}
+
+float vehicle_hil_imu_data_accel_y_mps2_decode(int16_t value)
+{
+    return ((float)value * 0.01f);
+}
+
+bool vehicle_hil_imu_data_accel_y_mps2_is_in_range(int16_t value)
+{
+    return ((value >= -5000) && (value <= 5000));
+}
+
+bool vehicle_hil_imu_data_accel_y_mps2_is_in_phys_range(float value)
+{
+    return ((value >= -50.0f) && (value <= 50.0f));
+}
+
+int16_t vehicle_hil_imu_data_yaw_rate_radps_encode(float value)
+{
+    return (int16_t)(value / 0.001f);
+}
+
+float vehicle_hil_imu_data_yaw_rate_radps_decode(int16_t value)
+{
+    return ((float)value * 0.001f);
+}
+
+bool vehicle_hil_imu_data_yaw_rate_radps_is_in_range(int16_t value)
+{
+    return ((value >= -2000) && (value <= 2000));
+}
+
+bool vehicle_hil_imu_data_yaw_rate_radps_is_in_phys_range(float value)
+{
+    return ((value >= -2.0f) && (value <= 2.0f));
+}
+
+uint8_t vehicle_hil_imu_data_imu_valid_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_imu_data_imu_valid_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_imu_data_imu_valid_is_in_range(uint8_t value)
+{
+    return (value <= 1u);
+}
+
+bool vehicle_hil_imu_data_imu_valid_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 1.0f));
+}
+
+uint8_t vehicle_hil_imu_data_alive_counter_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_imu_data_alive_counter_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_imu_data_alive_counter_is_in_range(uint8_t value)
+{
+    return (value <= 15u);
+}
+
+bool vehicle_hil_imu_data_alive_counter_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 15.0f));
+}
+
+uint8_t vehicle_hil_imu_data_crc8_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_imu_data_crc8_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_imu_data_crc8_is_in_range(uint8_t value)
+{
+    (void)value;
+
+    return (true);
+}
+
+bool vehicle_hil_imu_data_crc8_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 255.0f));
+}
+
+int vehicle_hil_obstacle_data_pack(
+    uint8_t *dst_p,
+    const struct vehicle_hil_obstacle_data_t *src_p,
+    size_t size)
+{
+    uint16_t closing_speed_mps;
+
+    if (size < 8u) {
+        return (-EINVAL);
+    }
+
+    memset(&dst_p[0], 0, 8);
+
+    dst_p[0] |= pack_left_shift_u16(src_p->distance_m, 0u, 0xffu);
+    dst_p[1] |= pack_right_shift_u16(src_p->distance_m, 8u, 0xffu);
+    closing_speed_mps = (uint16_t)src_p->closing_speed_mps;
+    dst_p[2] |= pack_left_shift_u16(closing_speed_mps, 0u, 0xffu);
+    dst_p[3] |= pack_right_shift_u16(closing_speed_mps, 8u, 0xffu);
+    dst_p[4] |= pack_left_shift_u8(src_p->confidence_pct, 0u, 0x7fu);
+    dst_p[4] |= pack_left_shift_u8(src_p->pedestrian_detected, 7u, 0x80u);
+    dst_p[5] |= pack_left_shift_u8(src_p->radar_valid, 0u, 0x01u);
+    dst_p[6] |= pack_left_shift_u8(src_p->alive_counter, 0u, 0x0fu);
+    dst_p[7] |= pack_left_shift_u8(src_p->crc8, 0u, 0xffu);
+
+    return (8);
+}
+
+int vehicle_hil_obstacle_data_unpack(
+    struct vehicle_hil_obstacle_data_t *dst_p,
+    const uint8_t *src_p,
+    size_t size)
+{
+    uint16_t closing_speed_mps;
+
+    if (size < 8u) {
+        return (-EINVAL);
+    }
+
+    dst_p->distance_m = unpack_right_shift_u16(src_p[0], 0u, 0xffu);
+    dst_p->distance_m |= unpack_left_shift_u16(src_p[1], 8u, 0xffu);
+    closing_speed_mps = unpack_right_shift_u16(src_p[2], 0u, 0xffu);
+    closing_speed_mps |= unpack_left_shift_u16(src_p[3], 8u, 0xffu);
+    dst_p->closing_speed_mps = (int16_t)closing_speed_mps;
+    dst_p->confidence_pct = unpack_right_shift_u8(src_p[4], 0u, 0x7fu);
+    dst_p->pedestrian_detected = unpack_right_shift_u8(src_p[4], 7u, 0x80u);
+    dst_p->radar_valid = unpack_right_shift_u8(src_p[5], 0u, 0x01u);
+    dst_p->alive_counter = unpack_right_shift_u8(src_p[6], 0u, 0x0fu);
+    dst_p->crc8 = unpack_right_shift_u8(src_p[7], 0u, 0xffu);
+
+    return (0);
+}
+
+int vehicle_hil_obstacle_data_init(struct vehicle_hil_obstacle_data_t *msg_p)
+{
+    if (msg_p == NULL) return -1;
+
+    memset(msg_p, 0, sizeof(struct vehicle_hil_obstacle_data_t));
+
+    return 0;
+}
+
+uint16_t vehicle_hil_obstacle_data_distance_m_encode(float value)
+{
+    return (uint16_t)(cantools_unsigned_from_double(value / 0.01f));
+}
+
+float vehicle_hil_obstacle_data_distance_m_decode(uint16_t value)
+{
+    return ((float)value * 0.01f);
+}
+
+bool vehicle_hil_obstacle_data_distance_m_is_in_range(uint16_t value)
+{
+    return (value <= 30000u);
+}
+
+bool vehicle_hil_obstacle_data_distance_m_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 300.0f));
+}
+
+int16_t vehicle_hil_obstacle_data_closing_speed_mps_encode(float value)
+{
+    return (int16_t)(value / 0.01f);
+}
+
+float vehicle_hil_obstacle_data_closing_speed_mps_decode(int16_t value)
+{
+    return ((float)value * 0.01f);
+}
+
+bool vehicle_hil_obstacle_data_closing_speed_mps_is_in_range(int16_t value)
+{
+    return ((value >= -10000) && (value <= 10000));
+}
+
+bool vehicle_hil_obstacle_data_closing_speed_mps_is_in_phys_range(float value)
+{
+    return ((value >= -100.0f) && (value <= 100.0f));
+}
+
+uint8_t vehicle_hil_obstacle_data_confidence_pct_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_obstacle_data_confidence_pct_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_obstacle_data_confidence_pct_is_in_range(uint8_t value)
+{
+    return (value <= 100u);
+}
+
+bool vehicle_hil_obstacle_data_confidence_pct_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 100.0f));
+}
+
+uint8_t vehicle_hil_obstacle_data_pedestrian_detected_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_obstacle_data_pedestrian_detected_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_obstacle_data_pedestrian_detected_is_in_range(uint8_t value)
+{
+    return (value <= 1u);
+}
+
+bool vehicle_hil_obstacle_data_pedestrian_detected_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 1.0f));
+}
+
+uint8_t vehicle_hil_obstacle_data_radar_valid_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_obstacle_data_radar_valid_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_obstacle_data_radar_valid_is_in_range(uint8_t value)
+{
+    return (value <= 1u);
+}
+
+bool vehicle_hil_obstacle_data_radar_valid_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 1.0f));
+}
+
+uint8_t vehicle_hil_obstacle_data_alive_counter_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_obstacle_data_alive_counter_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_obstacle_data_alive_counter_is_in_range(uint8_t value)
+{
+    return (value <= 15u);
+}
+
+bool vehicle_hil_obstacle_data_alive_counter_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 15.0f));
+}
+
+uint8_t vehicle_hil_obstacle_data_crc8_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_obstacle_data_crc8_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_obstacle_data_crc8_is_in_range(uint8_t value)
+{
+    (void)value;
+
+    return (true);
+}
+
+bool vehicle_hil_obstacle_data_crc8_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 255.0f));
+}
+
+int vehicle_hil_sensor_health_pack(
+    uint8_t *dst_p,
+    const struct vehicle_hil_sensor_health_t *src_p,
+    size_t size)
+{
+    if (size < 8u) {
+        return (-EINVAL);
+    }
+
+    memset(&dst_p[0], 0, 8);
+
+    dst_p[0] |= pack_left_shift_u8(src_p->wheel_valid, 0u, 0x01u);
+    dst_p[0] |= pack_left_shift_u8(src_p->imu_valid, 1u, 0x02u);
+    dst_p[0] |= pack_left_shift_u8(src_p->radar_valid, 2u, 0x04u);
+    dst_p[0] |= pack_left_shift_u8(src_p->localization_valid, 3u, 0x08u);
+    dst_p[1] |= pack_left_shift_u16(src_p->sim_fault_flags, 0u, 0xffu);
+    dst_p[2] |= pack_right_shift_u16(src_p->sim_fault_flags, 8u, 0xffu);
+    dst_p[6] |= pack_left_shift_u8(src_p->alive_counter, 0u, 0x0fu);
+    dst_p[7] |= pack_left_shift_u8(src_p->crc8, 0u, 0xffu);
+
+    return (8);
+}
+
+int vehicle_hil_sensor_health_unpack(
+    struct vehicle_hil_sensor_health_t *dst_p,
+    const uint8_t *src_p,
+    size_t size)
+{
+    if (size < 8u) {
+        return (-EINVAL);
+    }
+
+    dst_p->wheel_valid = unpack_right_shift_u8(src_p[0], 0u, 0x01u);
+    dst_p->imu_valid = unpack_right_shift_u8(src_p[0], 1u, 0x02u);
+    dst_p->radar_valid = unpack_right_shift_u8(src_p[0], 2u, 0x04u);
+    dst_p->localization_valid = unpack_right_shift_u8(src_p[0], 3u, 0x08u);
+    dst_p->sim_fault_flags = unpack_right_shift_u16(src_p[1], 0u, 0xffu);
+    dst_p->sim_fault_flags |= unpack_left_shift_u16(src_p[2], 8u, 0xffu);
+    dst_p->alive_counter = unpack_right_shift_u8(src_p[6], 0u, 0x0fu);
+    dst_p->crc8 = unpack_right_shift_u8(src_p[7], 0u, 0xffu);
+
+    return (0);
+}
+
+int vehicle_hil_sensor_health_init(struct vehicle_hil_sensor_health_t *msg_p)
+{
+    if (msg_p == NULL) return -1;
+
+    memset(msg_p, 0, sizeof(struct vehicle_hil_sensor_health_t));
+
+    return 0;
+}
+
+uint8_t vehicle_hil_sensor_health_wheel_valid_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_sensor_health_wheel_valid_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_sensor_health_wheel_valid_is_in_range(uint8_t value)
+{
+    return (value <= 1u);
+}
+
+bool vehicle_hil_sensor_health_wheel_valid_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 1.0f));
+}
+
+uint8_t vehicle_hil_sensor_health_imu_valid_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_sensor_health_imu_valid_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_sensor_health_imu_valid_is_in_range(uint8_t value)
+{
+    return (value <= 1u);
+}
+
+bool vehicle_hil_sensor_health_imu_valid_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 1.0f));
+}
+
+uint8_t vehicle_hil_sensor_health_radar_valid_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_sensor_health_radar_valid_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_sensor_health_radar_valid_is_in_range(uint8_t value)
+{
+    return (value <= 1u);
+}
+
+bool vehicle_hil_sensor_health_radar_valid_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 1.0f));
+}
+
+uint8_t vehicle_hil_sensor_health_localization_valid_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_sensor_health_localization_valid_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_sensor_health_localization_valid_is_in_range(uint8_t value)
+{
+    return (value <= 1u);
+}
+
+bool vehicle_hil_sensor_health_localization_valid_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 1.0f));
+}
+
+uint16_t vehicle_hil_sensor_health_sim_fault_flags_encode(float value)
+{
+    return (uint16_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_sensor_health_sim_fault_flags_decode(uint16_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_sensor_health_sim_fault_flags_is_in_range(uint16_t value)
+{
+    (void)value;
+
+    return (true);
+}
+
+bool vehicle_hil_sensor_health_sim_fault_flags_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 65535.0f));
+}
+
+uint8_t vehicle_hil_sensor_health_alive_counter_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_sensor_health_alive_counter_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_sensor_health_alive_counter_is_in_range(uint8_t value)
+{
+    return (value <= 15u);
+}
+
+bool vehicle_hil_sensor_health_alive_counter_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 15.0f));
+}
+
+uint8_t vehicle_hil_sensor_health_crc8_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_sensor_health_crc8_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_sensor_health_crc8_is_in_range(uint8_t value)
+{
+    (void)value;
+
+    return (true);
+}
+
+bool vehicle_hil_sensor_health_crc8_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 255.0f));
+}
+
+int vehicle_hil_drive_request_pack(
+    uint8_t *dst_p,
+    const struct vehicle_hil_drive_request_t *src_p,
+    size_t size)
+{
+    uint16_t requested_accel_mps2;
+    uint16_t requested_steer_rad;
+
+    if (size < 8u) {
+        return (-EINVAL);
+    }
+
+    memset(&dst_p[0], 0, 8);
+
+    requested_accel_mps2 = (uint16_t)src_p->requested_accel_mps2;
+    dst_p[0] |= pack_left_shift_u16(requested_accel_mps2, 0u, 0xffu);
+    dst_p[1] |= pack_right_shift_u16(requested_accel_mps2, 8u, 0xffu);
+    requested_steer_rad = (uint16_t)src_p->requested_steer_rad;
+    dst_p[2] |= pack_left_shift_u16(requested_steer_rad, 0u, 0xffu);
+    dst_p[3] |= pack_right_shift_u16(requested_steer_rad, 8u, 0x0fu);
+    dst_p[3] |= pack_left_shift_u8(src_p->driver_source, 4u, 0x70u);
+    dst_p[3] |= pack_left_shift_u8(src_p->driver_valid, 7u, 0x80u);
+    dst_p[6] |= pack_left_shift_u8(src_p->alive_counter, 0u, 0x0fu);
+    dst_p[7] |= pack_left_shift_u8(src_p->crc8, 0u, 0xffu);
+
+    return (8);
+}
+
+int vehicle_hil_drive_request_unpack(
+    struct vehicle_hil_drive_request_t *dst_p,
+    const uint8_t *src_p,
+    size_t size)
+{
+    uint16_t requested_accel_mps2;
+    uint16_t requested_steer_rad;
+
+    if (size < 8u) {
+        return (-EINVAL);
+    }
+
+    requested_accel_mps2 = unpack_right_shift_u16(src_p[0], 0u, 0xffu);
+    requested_accel_mps2 |= unpack_left_shift_u16(src_p[1], 8u, 0xffu);
+    dst_p->requested_accel_mps2 = (int16_t)requested_accel_mps2;
+    requested_steer_rad = unpack_right_shift_u16(src_p[2], 0u, 0xffu);
+    requested_steer_rad |= unpack_left_shift_u16(src_p[3], 8u, 0x0fu);
+
+    if ((requested_steer_rad & (1u << 11)) != 0u) {
+        requested_steer_rad |= 0xf000u;
+    }
+
+    dst_p->requested_steer_rad = (int16_t)requested_steer_rad;
+    dst_p->driver_source = unpack_right_shift_u8(src_p[3], 4u, 0x70u);
+    dst_p->driver_valid = unpack_right_shift_u8(src_p[3], 7u, 0x80u);
+    dst_p->alive_counter = unpack_right_shift_u8(src_p[6], 0u, 0x0fu);
+    dst_p->crc8 = unpack_right_shift_u8(src_p[7], 0u, 0xffu);
+
+    return (0);
+}
+
+int vehicle_hil_drive_request_init(struct vehicle_hil_drive_request_t *msg_p)
+{
+    if (msg_p == NULL) return -1;
+
+    memset(msg_p, 0, sizeof(struct vehicle_hil_drive_request_t));
+
+    return 0;
+}
+
+int16_t vehicle_hil_drive_request_requested_accel_mps2_encode(float value)
+{
+    return (int16_t)(value / 0.01f);
+}
+
+float vehicle_hil_drive_request_requested_accel_mps2_decode(int16_t value)
+{
+    return ((float)value * 0.01f);
+}
+
+bool vehicle_hil_drive_request_requested_accel_mps2_is_in_range(int16_t value)
+{
+    return ((value >= -1000) && (value <= 1000));
+}
+
+bool vehicle_hil_drive_request_requested_accel_mps2_is_in_phys_range(float value)
+{
+    return ((value >= -10.0f) && (value <= 10.0f));
+}
+
+int16_t vehicle_hil_drive_request_requested_steer_rad_encode(float value)
+{
+    return (int16_t)(value / 0.001f);
+}
+
+float vehicle_hil_drive_request_requested_steer_rad_decode(int16_t value)
+{
+    return ((float)value * 0.001f);
+}
+
+bool vehicle_hil_drive_request_requested_steer_rad_is_in_range(int16_t value)
+{
+    return ((value >= -2000) && (value <= 2000));
+}
+
+bool vehicle_hil_drive_request_requested_steer_rad_is_in_phys_range(float value)
+{
+    return ((value >= -2.0f) && (value <= 2.0f));
+}
+
+uint8_t vehicle_hil_drive_request_driver_source_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_drive_request_driver_source_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_drive_request_driver_source_is_in_range(uint8_t value)
+{
+    return (value <= 3u);
+}
+
+bool vehicle_hil_drive_request_driver_source_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 3.0f));
+}
+
+uint8_t vehicle_hil_drive_request_driver_valid_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_drive_request_driver_valid_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_drive_request_driver_valid_is_in_range(uint8_t value)
+{
+    return (value <= 1u);
+}
+
+bool vehicle_hil_drive_request_driver_valid_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 1.0f));
+}
+
+uint8_t vehicle_hil_drive_request_alive_counter_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_drive_request_alive_counter_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_drive_request_alive_counter_is_in_range(uint8_t value)
+{
+    return (value <= 15u);
+}
+
+bool vehicle_hil_drive_request_alive_counter_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 15.0f));
+}
+
+uint8_t vehicle_hil_drive_request_crc8_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_drive_request_crc8_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_drive_request_crc8_is_in_range(uint8_t value)
+{
+    (void)value;
+
+    return (true);
+}
+
+bool vehicle_hil_drive_request_crc8_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 255.0f));
 }
 
 int vehicle_hil_safety_command_pack(
@@ -295,7 +1308,7 @@ int vehicle_hil_safety_command_pack(
 
     memset(&dst_p[0], 0, 8);
 
-    dst_p[0] |= pack_left_shift_u8(src_p->brake_request_percent, 0u, 0xffu);
+    dst_p[0] |= pack_left_shift_u8(src_p->brake_request_pct, 0u, 0xffu);
     dst_p[1] |= pack_left_shift_u8(src_p->safety_state, 0u, 0x0fu);
     dst_p[1] |= pack_left_shift_u8(src_p->emergency_brake_active, 4u, 0x10u);
     dst_p[2] |= pack_left_shift_u16(src_p->fault_code, 0u, 0xffu);
@@ -315,7 +1328,7 @@ int vehicle_hil_safety_command_unpack(
         return (-EINVAL);
     }
 
-    dst_p->brake_request_percent = unpack_right_shift_u8(src_p[0], 0u, 0xffu);
+    dst_p->brake_request_pct = unpack_right_shift_u8(src_p[0], 0u, 0xffu);
     dst_p->safety_state = unpack_right_shift_u8(src_p[1], 0u, 0x0fu);
     dst_p->emergency_brake_active = unpack_right_shift_u8(src_p[1], 4u, 0x10u);
     dst_p->fault_code = unpack_right_shift_u16(src_p[2], 0u, 0xffu);
@@ -335,34 +1348,34 @@ int vehicle_hil_safety_command_init(struct vehicle_hil_safety_command_t *msg_p)
     return 0;
 }
 
-uint8_t vehicle_hil_safety_command_brake_request_percent_encode(double value)
+uint8_t vehicle_hil_safety_command_brake_request_pct_encode(float value)
 {
     return (uint8_t)(cantools_unsigned_from_double(value));
 }
 
-double vehicle_hil_safety_command_brake_request_percent_decode(uint8_t value)
+float vehicle_hil_safety_command_brake_request_pct_decode(uint8_t value)
 {
-    return ((double)value);
+    return ((float)value);
 }
 
-bool vehicle_hil_safety_command_brake_request_percent_is_in_range(uint8_t value)
+bool vehicle_hil_safety_command_brake_request_pct_is_in_range(uint8_t value)
 {
     return (value <= 100u);
 }
 
-bool vehicle_hil_safety_command_brake_request_percent_is_in_phys_range(double value)
+bool vehicle_hil_safety_command_brake_request_pct_is_in_phys_range(float value)
 {
-    return ((value >= 0.0) && (value <= 100.0));
+    return ((value >= 0.0f) && (value <= 100.0f));
 }
 
-uint8_t vehicle_hil_safety_command_safety_state_encode(double value)
+uint8_t vehicle_hil_safety_command_safety_state_encode(float value)
 {
     return (uint8_t)(cantools_unsigned_from_double(value));
 }
 
-double vehicle_hil_safety_command_safety_state_decode(uint8_t value)
+float vehicle_hil_safety_command_safety_state_decode(uint8_t value)
 {
-    return ((double)value);
+    return ((float)value);
 }
 
 bool vehicle_hil_safety_command_safety_state_is_in_range(uint8_t value)
@@ -370,19 +1383,19 @@ bool vehicle_hil_safety_command_safety_state_is_in_range(uint8_t value)
     return (value <= 3u);
 }
 
-bool vehicle_hil_safety_command_safety_state_is_in_phys_range(double value)
+bool vehicle_hil_safety_command_safety_state_is_in_phys_range(float value)
 {
-    return ((value >= 0.0) && (value <= 3.0));
+    return ((value >= 0.0f) && (value <= 3.0f));
 }
 
-uint8_t vehicle_hil_safety_command_emergency_brake_active_encode(double value)
+uint8_t vehicle_hil_safety_command_emergency_brake_active_encode(float value)
 {
     return (uint8_t)(cantools_unsigned_from_double(value));
 }
 
-double vehicle_hil_safety_command_emergency_brake_active_decode(uint8_t value)
+float vehicle_hil_safety_command_emergency_brake_active_decode(uint8_t value)
 {
-    return ((double)value);
+    return ((float)value);
 }
 
 bool vehicle_hil_safety_command_emergency_brake_active_is_in_range(uint8_t value)
@@ -390,19 +1403,19 @@ bool vehicle_hil_safety_command_emergency_brake_active_is_in_range(uint8_t value
     return (value <= 1u);
 }
 
-bool vehicle_hil_safety_command_emergency_brake_active_is_in_phys_range(double value)
+bool vehicle_hil_safety_command_emergency_brake_active_is_in_phys_range(float value)
 {
-    return ((value >= 0.0) && (value <= 1.0));
+    return ((value >= 0.0f) && (value <= 1.0f));
 }
 
-uint16_t vehicle_hil_safety_command_fault_code_encode(double value)
+uint16_t vehicle_hil_safety_command_fault_code_encode(float value)
 {
     return (uint16_t)(cantools_unsigned_from_double(value));
 }
 
-double vehicle_hil_safety_command_fault_code_decode(uint16_t value)
+float vehicle_hil_safety_command_fault_code_decode(uint16_t value)
 {
-    return ((double)value);
+    return ((float)value);
 }
 
 bool vehicle_hil_safety_command_fault_code_is_in_range(uint16_t value)
@@ -412,19 +1425,19 @@ bool vehicle_hil_safety_command_fault_code_is_in_range(uint16_t value)
     return (true);
 }
 
-bool vehicle_hil_safety_command_fault_code_is_in_phys_range(double value)
+bool vehicle_hil_safety_command_fault_code_is_in_phys_range(float value)
 {
-    return ((value >= 0.0) && (value <= 65535.0));
+    return ((value >= 0.0f) && (value <= 65535.0f));
 }
 
-uint8_t vehicle_hil_safety_command_alive_counter_encode(double value)
+uint8_t vehicle_hil_safety_command_alive_counter_encode(float value)
 {
     return (uint8_t)(cantools_unsigned_from_double(value));
 }
 
-double vehicle_hil_safety_command_alive_counter_decode(uint8_t value)
+float vehicle_hil_safety_command_alive_counter_decode(uint8_t value)
 {
-    return ((double)value);
+    return ((float)value);
 }
 
 bool vehicle_hil_safety_command_alive_counter_is_in_range(uint8_t value)
@@ -432,19 +1445,19 @@ bool vehicle_hil_safety_command_alive_counter_is_in_range(uint8_t value)
     return (value <= 15u);
 }
 
-bool vehicle_hil_safety_command_alive_counter_is_in_phys_range(double value)
+bool vehicle_hil_safety_command_alive_counter_is_in_phys_range(float value)
 {
-    return ((value >= 0.0) && (value <= 15.0));
+    return ((value >= 0.0f) && (value <= 15.0f));
 }
 
-uint8_t vehicle_hil_safety_command_crc8_encode(double value)
+uint8_t vehicle_hil_safety_command_crc8_encode(float value)
 {
     return (uint8_t)(cantools_unsigned_from_double(value));
 }
 
-double vehicle_hil_safety_command_crc8_decode(uint8_t value)
+float vehicle_hil_safety_command_crc8_decode(uint8_t value)
 {
-    return ((double)value);
+    return ((float)value);
 }
 
 bool vehicle_hil_safety_command_crc8_is_in_range(uint8_t value)
@@ -454,7 +1467,603 @@ bool vehicle_hil_safety_command_crc8_is_in_range(uint8_t value)
     return (true);
 }
 
-bool vehicle_hil_safety_command_crc8_is_in_phys_range(double value)
+bool vehicle_hil_safety_command_crc8_is_in_phys_range(float value)
 {
-    return ((value >= 0.0) && (value <= 255.0));
+    return ((value >= 0.0f) && (value <= 255.0f));
+}
+
+int vehicle_hil_ecu_status_pack(
+    uint8_t *dst_p,
+    const struct vehicle_hil_ecu_status_t *src_p,
+    size_t size)
+{
+    if (size < 8u) {
+        return (-EINVAL);
+    }
+
+    memset(&dst_p[0], 0, 8);
+
+    dst_p[0] |= pack_left_shift_u32(src_p->active_fault_bitmap, 0u, 0xffu);
+    dst_p[1] |= pack_right_shift_u32(src_p->active_fault_bitmap, 8u, 0xffu);
+    dst_p[2] |= pack_right_shift_u32(src_p->active_fault_bitmap, 16u, 0xffu);
+    dst_p[3] |= pack_right_shift_u32(src_p->active_fault_bitmap, 24u, 0xffu);
+    dst_p[4] |= pack_left_shift_u8(src_p->cpu_load_pct, 0u, 0x7fu);
+    dst_p[4] |= pack_left_shift_u8(src_p->anomaly_score, 7u, 0x80u);
+    dst_p[5] |= pack_right_shift_u8(src_p->anomaly_score, 1u, 0x3fu);
+    dst_p[6] |= pack_left_shift_u8(src_p->alive_counter, 0u, 0x0fu);
+    dst_p[7] |= pack_left_shift_u8(src_p->crc8, 0u, 0xffu);
+
+    return (8);
+}
+
+int vehicle_hil_ecu_status_unpack(
+    struct vehicle_hil_ecu_status_t *dst_p,
+    const uint8_t *src_p,
+    size_t size)
+{
+    if (size < 8u) {
+        return (-EINVAL);
+    }
+
+    dst_p->active_fault_bitmap = unpack_right_shift_u32(src_p[0], 0u, 0xffu);
+    dst_p->active_fault_bitmap |= unpack_left_shift_u32(src_p[1], 8u, 0xffu);
+    dst_p->active_fault_bitmap |= unpack_left_shift_u32(src_p[2], 16u, 0xffu);
+    dst_p->active_fault_bitmap |= unpack_left_shift_u32(src_p[3], 24u, 0xffu);
+    dst_p->cpu_load_pct = unpack_right_shift_u8(src_p[4], 0u, 0x7fu);
+    dst_p->anomaly_score = unpack_right_shift_u8(src_p[4], 7u, 0x80u);
+    dst_p->anomaly_score |= unpack_left_shift_u8(src_p[5], 1u, 0x3fu);
+    dst_p->alive_counter = unpack_right_shift_u8(src_p[6], 0u, 0x0fu);
+    dst_p->crc8 = unpack_right_shift_u8(src_p[7], 0u, 0xffu);
+
+    return (0);
+}
+
+int vehicle_hil_ecu_status_init(struct vehicle_hil_ecu_status_t *msg_p)
+{
+    if (msg_p == NULL) return -1;
+
+    memset(msg_p, 0, sizeof(struct vehicle_hil_ecu_status_t));
+
+    return 0;
+}
+
+uint32_t vehicle_hil_ecu_status_active_fault_bitmap_encode(float value)
+{
+    return (uint32_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_ecu_status_active_fault_bitmap_decode(uint32_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_ecu_status_active_fault_bitmap_is_in_range(uint32_t value)
+{
+    (void)value;
+
+    return (true);
+}
+
+bool vehicle_hil_ecu_status_active_fault_bitmap_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 4294967295.0f));
+}
+
+uint8_t vehicle_hil_ecu_status_cpu_load_pct_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_ecu_status_cpu_load_pct_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_ecu_status_cpu_load_pct_is_in_range(uint8_t value)
+{
+    return (value <= 100u);
+}
+
+bool vehicle_hil_ecu_status_cpu_load_pct_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 100.0f));
+}
+
+uint8_t vehicle_hil_ecu_status_anomaly_score_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value / 0.01f));
+}
+
+float vehicle_hil_ecu_status_anomaly_score_decode(uint8_t value)
+{
+    return ((float)value * 0.01f);
+}
+
+bool vehicle_hil_ecu_status_anomaly_score_is_in_range(uint8_t value)
+{
+    return (value <= 100u);
+}
+
+bool vehicle_hil_ecu_status_anomaly_score_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 1.0f));
+}
+
+uint8_t vehicle_hil_ecu_status_alive_counter_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_ecu_status_alive_counter_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_ecu_status_alive_counter_is_in_range(uint8_t value)
+{
+    return (value <= 15u);
+}
+
+bool vehicle_hil_ecu_status_alive_counter_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 15.0f));
+}
+
+uint8_t vehicle_hil_ecu_status_crc8_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_ecu_status_crc8_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_ecu_status_crc8_is_in_range(uint8_t value)
+{
+    (void)value;
+
+    return (true);
+}
+
+bool vehicle_hil_ecu_status_crc8_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 255.0f));
+}
+
+int vehicle_hil_actuator_command_pack(
+    uint8_t *dst_p,
+    const struct vehicle_hil_actuator_command_t *src_p,
+    size_t size)
+{
+    uint16_t commanded_accel_mps2;
+    uint16_t commanded_steer_rad;
+
+    if (size < 8u) {
+        return (-EINVAL);
+    }
+
+    memset(&dst_p[0], 0, 8);
+
+    commanded_accel_mps2 = (uint16_t)src_p->commanded_accel_mps2;
+    dst_p[0] |= pack_left_shift_u16(commanded_accel_mps2, 0u, 0xffu);
+    dst_p[1] |= pack_right_shift_u16(commanded_accel_mps2, 8u, 0xffu);
+    commanded_steer_rad = (uint16_t)src_p->commanded_steer_rad;
+    dst_p[2] |= pack_left_shift_u16(commanded_steer_rad, 0u, 0xffu);
+    dst_p[3] |= pack_right_shift_u16(commanded_steer_rad, 8u, 0x0fu);
+    dst_p[3] |= pack_left_shift_u8(src_p->override_active, 4u, 0x10u);
+    dst_p[3] |= pack_left_shift_u8(src_p->override_reason, 5u, 0xe0u);
+    dst_p[6] |= pack_left_shift_u8(src_p->alive_counter, 0u, 0x0fu);
+    dst_p[7] |= pack_left_shift_u8(src_p->crc8, 0u, 0xffu);
+
+    return (8);
+}
+
+int vehicle_hil_actuator_command_unpack(
+    struct vehicle_hil_actuator_command_t *dst_p,
+    const uint8_t *src_p,
+    size_t size)
+{
+    uint16_t commanded_accel_mps2;
+    uint16_t commanded_steer_rad;
+
+    if (size < 8u) {
+        return (-EINVAL);
+    }
+
+    commanded_accel_mps2 = unpack_right_shift_u16(src_p[0], 0u, 0xffu);
+    commanded_accel_mps2 |= unpack_left_shift_u16(src_p[1], 8u, 0xffu);
+    dst_p->commanded_accel_mps2 = (int16_t)commanded_accel_mps2;
+    commanded_steer_rad = unpack_right_shift_u16(src_p[2], 0u, 0xffu);
+    commanded_steer_rad |= unpack_left_shift_u16(src_p[3], 8u, 0x0fu);
+
+    if ((commanded_steer_rad & (1u << 11)) != 0u) {
+        commanded_steer_rad |= 0xf000u;
+    }
+
+    dst_p->commanded_steer_rad = (int16_t)commanded_steer_rad;
+    dst_p->override_active = unpack_right_shift_u8(src_p[3], 4u, 0x10u);
+    dst_p->override_reason = unpack_right_shift_u8(src_p[3], 5u, 0xe0u);
+    dst_p->alive_counter = unpack_right_shift_u8(src_p[6], 0u, 0x0fu);
+    dst_p->crc8 = unpack_right_shift_u8(src_p[7], 0u, 0xffu);
+
+    return (0);
+}
+
+int vehicle_hil_actuator_command_init(struct vehicle_hil_actuator_command_t *msg_p)
+{
+    if (msg_p == NULL) return -1;
+
+    memset(msg_p, 0, sizeof(struct vehicle_hil_actuator_command_t));
+
+    return 0;
+}
+
+int16_t vehicle_hil_actuator_command_commanded_accel_mps2_encode(float value)
+{
+    return (int16_t)(value / 0.01f);
+}
+
+float vehicle_hil_actuator_command_commanded_accel_mps2_decode(int16_t value)
+{
+    return ((float)value * 0.01f);
+}
+
+bool vehicle_hil_actuator_command_commanded_accel_mps2_is_in_range(int16_t value)
+{
+    return ((value >= -1000) && (value <= 1000));
+}
+
+bool vehicle_hil_actuator_command_commanded_accel_mps2_is_in_phys_range(float value)
+{
+    return ((value >= -10.0f) && (value <= 10.0f));
+}
+
+int16_t vehicle_hil_actuator_command_commanded_steer_rad_encode(float value)
+{
+    return (int16_t)(value / 0.001f);
+}
+
+float vehicle_hil_actuator_command_commanded_steer_rad_decode(int16_t value)
+{
+    return ((float)value * 0.001f);
+}
+
+bool vehicle_hil_actuator_command_commanded_steer_rad_is_in_range(int16_t value)
+{
+    return ((value >= -2000) && (value <= 2000));
+}
+
+bool vehicle_hil_actuator_command_commanded_steer_rad_is_in_phys_range(float value)
+{
+    return ((value >= -2.0f) && (value <= 2.0f));
+}
+
+uint8_t vehicle_hil_actuator_command_override_active_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_actuator_command_override_active_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_actuator_command_override_active_is_in_range(uint8_t value)
+{
+    return (value <= 1u);
+}
+
+bool vehicle_hil_actuator_command_override_active_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 1.0f));
+}
+
+uint8_t vehicle_hil_actuator_command_override_reason_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_actuator_command_override_reason_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_actuator_command_override_reason_is_in_range(uint8_t value)
+{
+    return (value <= 4u);
+}
+
+bool vehicle_hil_actuator_command_override_reason_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 4.0f));
+}
+
+uint8_t vehicle_hil_actuator_command_alive_counter_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_actuator_command_alive_counter_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_actuator_command_alive_counter_is_in_range(uint8_t value)
+{
+    return (value <= 15u);
+}
+
+bool vehicle_hil_actuator_command_alive_counter_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 15.0f));
+}
+
+uint8_t vehicle_hil_actuator_command_crc8_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_actuator_command_crc8_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_actuator_command_crc8_is_in_range(uint8_t value)
+{
+    (void)value;
+
+    return (true);
+}
+
+bool vehicle_hil_actuator_command_crc8_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 255.0f));
+}
+
+int vehicle_hil_ecu_diagnostics_pack(
+    uint8_t *dst_p,
+    const struct vehicle_hil_ecu_diagnostics_t *src_p,
+    size_t size)
+{
+    if (size < 8u) {
+        return (-EINVAL);
+    }
+
+    memset(&dst_p[0], 0, 8);
+
+    dst_p[0] |= pack_left_shift_u8(src_p->crc_error_count, 0u, 0xffu);
+    dst_p[1] |= pack_left_shift_u8(src_p->counter_jump_count, 0u, 0xffu);
+    dst_p[2] |= pack_left_shift_u8(src_p->repeat_count, 0u, 0xffu);
+    dst_p[3] |= pack_left_shift_u8(src_p->range_error_count, 0u, 0xffu);
+    dst_p[4] |= pack_left_shift_u8(src_p->rx_drop_count, 0u, 0xffu);
+    dst_p[5] |= pack_left_shift_u8(src_p->watchdog_reset_count, 0u, 0x0fu);
+    dst_p[5] |= pack_left_shift_u8(src_p->reset_reason, 4u, 0xf0u);
+    dst_p[6] |= pack_left_shift_u8(src_p->alive_counter, 0u, 0x0fu);
+    dst_p[7] |= pack_left_shift_u8(src_p->crc8, 0u, 0xffu);
+
+    return (8);
+}
+
+int vehicle_hil_ecu_diagnostics_unpack(
+    struct vehicle_hil_ecu_diagnostics_t *dst_p,
+    const uint8_t *src_p,
+    size_t size)
+{
+    if (size < 8u) {
+        return (-EINVAL);
+    }
+
+    dst_p->crc_error_count = unpack_right_shift_u8(src_p[0], 0u, 0xffu);
+    dst_p->counter_jump_count = unpack_right_shift_u8(src_p[1], 0u, 0xffu);
+    dst_p->repeat_count = unpack_right_shift_u8(src_p[2], 0u, 0xffu);
+    dst_p->range_error_count = unpack_right_shift_u8(src_p[3], 0u, 0xffu);
+    dst_p->rx_drop_count = unpack_right_shift_u8(src_p[4], 0u, 0xffu);
+    dst_p->watchdog_reset_count = unpack_right_shift_u8(src_p[5], 0u, 0x0fu);
+    dst_p->reset_reason = unpack_right_shift_u8(src_p[5], 4u, 0xf0u);
+    dst_p->alive_counter = unpack_right_shift_u8(src_p[6], 0u, 0x0fu);
+    dst_p->crc8 = unpack_right_shift_u8(src_p[7], 0u, 0xffu);
+
+    return (0);
+}
+
+int vehicle_hil_ecu_diagnostics_init(struct vehicle_hil_ecu_diagnostics_t *msg_p)
+{
+    if (msg_p == NULL) return -1;
+
+    memset(msg_p, 0, sizeof(struct vehicle_hil_ecu_diagnostics_t));
+
+    return 0;
+}
+
+uint8_t vehicle_hil_ecu_diagnostics_crc_error_count_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_ecu_diagnostics_crc_error_count_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_ecu_diagnostics_crc_error_count_is_in_range(uint8_t value)
+{
+    (void)value;
+
+    return (true);
+}
+
+bool vehicle_hil_ecu_diagnostics_crc_error_count_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 255.0f));
+}
+
+uint8_t vehicle_hil_ecu_diagnostics_counter_jump_count_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_ecu_diagnostics_counter_jump_count_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_ecu_diagnostics_counter_jump_count_is_in_range(uint8_t value)
+{
+    (void)value;
+
+    return (true);
+}
+
+bool vehicle_hil_ecu_diagnostics_counter_jump_count_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 255.0f));
+}
+
+uint8_t vehicle_hil_ecu_diagnostics_repeat_count_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_ecu_diagnostics_repeat_count_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_ecu_diagnostics_repeat_count_is_in_range(uint8_t value)
+{
+    (void)value;
+
+    return (true);
+}
+
+bool vehicle_hil_ecu_diagnostics_repeat_count_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 255.0f));
+}
+
+uint8_t vehicle_hil_ecu_diagnostics_range_error_count_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_ecu_diagnostics_range_error_count_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_ecu_diagnostics_range_error_count_is_in_range(uint8_t value)
+{
+    (void)value;
+
+    return (true);
+}
+
+bool vehicle_hil_ecu_diagnostics_range_error_count_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 255.0f));
+}
+
+uint8_t vehicle_hil_ecu_diagnostics_rx_drop_count_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_ecu_diagnostics_rx_drop_count_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_ecu_diagnostics_rx_drop_count_is_in_range(uint8_t value)
+{
+    (void)value;
+
+    return (true);
+}
+
+bool vehicle_hil_ecu_diagnostics_rx_drop_count_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 255.0f));
+}
+
+uint8_t vehicle_hil_ecu_diagnostics_watchdog_reset_count_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_ecu_diagnostics_watchdog_reset_count_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_ecu_diagnostics_watchdog_reset_count_is_in_range(uint8_t value)
+{
+    return (value <= 15u);
+}
+
+bool vehicle_hil_ecu_diagnostics_watchdog_reset_count_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 15.0f));
+}
+
+uint8_t vehicle_hil_ecu_diagnostics_reset_reason_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_ecu_diagnostics_reset_reason_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_ecu_diagnostics_reset_reason_is_in_range(uint8_t value)
+{
+    return (value <= 15u);
+}
+
+bool vehicle_hil_ecu_diagnostics_reset_reason_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 15.0f));
+}
+
+uint8_t vehicle_hil_ecu_diagnostics_alive_counter_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_ecu_diagnostics_alive_counter_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_ecu_diagnostics_alive_counter_is_in_range(uint8_t value)
+{
+    return (value <= 15u);
+}
+
+bool vehicle_hil_ecu_diagnostics_alive_counter_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 15.0f));
+}
+
+uint8_t vehicle_hil_ecu_diagnostics_crc8_encode(float value)
+{
+    return (uint8_t)(cantools_unsigned_from_double(value));
+}
+
+float vehicle_hil_ecu_diagnostics_crc8_decode(uint8_t value)
+{
+    return ((float)value);
+}
+
+bool vehicle_hil_ecu_diagnostics_crc8_is_in_range(uint8_t value)
+{
+    (void)value;
+
+    return (true);
+}
+
+bool vehicle_hil_ecu_diagnostics_crc8_is_in_phys_range(float value)
+{
+    return ((value >= 0.0f) && (value <= 255.0f));
 }

@@ -46,18 +46,51 @@ extern "C" {
 
 /* Frame ids. */
 #define VEHICLE_HIL_VEHICLE_STATE_FRAME_ID (0x100u)
+#define VEHICLE_HIL_WHEEL_SPEED_FRAME_ID (0x101u)
+#define VEHICLE_HIL_IMU_DATA_FRAME_ID (0x102u)
+#define VEHICLE_HIL_OBSTACLE_DATA_FRAME_ID (0x103u)
+#define VEHICLE_HIL_SENSOR_HEALTH_FRAME_ID (0x104u)
+#define VEHICLE_HIL_DRIVE_REQUEST_FRAME_ID (0x105u)
 #define VEHICLE_HIL_SAFETY_COMMAND_FRAME_ID (0x200u)
+#define VEHICLE_HIL_ECU_STATUS_FRAME_ID (0x201u)
+#define VEHICLE_HIL_ACTUATOR_COMMAND_FRAME_ID (0x202u)
+#define VEHICLE_HIL_ECU_DIAGNOSTICS_FRAME_ID (0x203u)
 
 /* Frame lengths in bytes. */
 #define VEHICLE_HIL_VEHICLE_STATE_LENGTH (8u)
+#define VEHICLE_HIL_WHEEL_SPEED_LENGTH (8u)
+#define VEHICLE_HIL_IMU_DATA_LENGTH (8u)
+#define VEHICLE_HIL_OBSTACLE_DATA_LENGTH (8u)
+#define VEHICLE_HIL_SENSOR_HEALTH_LENGTH (8u)
+#define VEHICLE_HIL_DRIVE_REQUEST_LENGTH (8u)
 #define VEHICLE_HIL_SAFETY_COMMAND_LENGTH (8u)
+#define VEHICLE_HIL_ECU_STATUS_LENGTH (8u)
+#define VEHICLE_HIL_ACTUATOR_COMMAND_LENGTH (8u)
+#define VEHICLE_HIL_ECU_DIAGNOSTICS_LENGTH (8u)
 
 /* Extended or standard frame types. */
 #define VEHICLE_HIL_VEHICLE_STATE_IS_EXTENDED (0)
+#define VEHICLE_HIL_WHEEL_SPEED_IS_EXTENDED (0)
+#define VEHICLE_HIL_IMU_DATA_IS_EXTENDED (0)
+#define VEHICLE_HIL_OBSTACLE_DATA_IS_EXTENDED (0)
+#define VEHICLE_HIL_SENSOR_HEALTH_IS_EXTENDED (0)
+#define VEHICLE_HIL_DRIVE_REQUEST_IS_EXTENDED (0)
 #define VEHICLE_HIL_SAFETY_COMMAND_IS_EXTENDED (0)
+#define VEHICLE_HIL_ECU_STATUS_IS_EXTENDED (0)
+#define VEHICLE_HIL_ACTUATOR_COMMAND_IS_EXTENDED (0)
+#define VEHICLE_HIL_ECU_DIAGNOSTICS_IS_EXTENDED (0)
 
 /* Frame cycle times in milliseconds. */
-
+#define VEHICLE_HIL_VEHICLE_STATE_CYCLE_TIME_MS (20u)
+#define VEHICLE_HIL_WHEEL_SPEED_CYCLE_TIME_MS (10u)
+#define VEHICLE_HIL_IMU_DATA_CYCLE_TIME_MS (10u)
+#define VEHICLE_HIL_OBSTACLE_DATA_CYCLE_TIME_MS (20u)
+#define VEHICLE_HIL_SENSOR_HEALTH_CYCLE_TIME_MS (100u)
+#define VEHICLE_HIL_DRIVE_REQUEST_CYCLE_TIME_MS (20u)
+#define VEHICLE_HIL_SAFETY_COMMAND_CYCLE_TIME_MS (20u)
+#define VEHICLE_HIL_ECU_STATUS_CYCLE_TIME_MS (100u)
+#define VEHICLE_HIL_ACTUATOR_COMMAND_CYCLE_TIME_MS (20u)
+#define VEHICLE_HIL_ECU_DIAGNOSTICS_CYCLE_TIME_MS (1000u)
 
 /* Signal choices. */
 #define VEHICLE_HIL_VEHICLE_STATE_GEAR_STATE_PARK_CHOICE (0u)
@@ -65,28 +98,99 @@ extern "C" {
 #define VEHICLE_HIL_VEHICLE_STATE_GEAR_STATE_NEUTRAL_CHOICE (2u)
 #define VEHICLE_HIL_VEHICLE_STATE_GEAR_STATE_DRIVE_CHOICE (3u)
 
+#define VEHICLE_HIL_DRIVE_REQUEST_DRIVER_SOURCE_SCRIPTED_CHOICE (0u)
+#define VEHICLE_HIL_DRIVE_REQUEST_DRIVER_SOURCE_CLASSIC_CHOICE (1u)
+#define VEHICLE_HIL_DRIVE_REQUEST_DRIVER_SOURCE_LEARNED_CHOICE (2u)
+#define VEHICLE_HIL_DRIVE_REQUEST_DRIVER_SOURCE_HUMAN_CHOICE (3u)
+
 #define VEHICLE_HIL_SAFETY_COMMAND_SAFETY_STATE_NORMAL_CHOICE (0u)
 #define VEHICLE_HIL_SAFETY_COMMAND_SAFETY_STATE_WARNING_CHOICE (1u)
 #define VEHICLE_HIL_SAFETY_COMMAND_SAFETY_STATE_DEGRADED_CHOICE (2u)
 #define VEHICLE_HIL_SAFETY_COMMAND_SAFETY_STATE_EMERGENCY_BRAKE_CHOICE (3u)
 
+#define VEHICLE_HIL_ACTUATOR_COMMAND_OVERRIDE_REASON_NONE_CHOICE (0u)
+#define VEHICLE_HIL_ACTUATOR_COMMAND_OVERRIDE_REASON_LIMIT_CHOICE (1u)
+#define VEHICLE_HIL_ACTUATOR_COMMAND_OVERRIDE_REASON_SAFETY_BRAKE_CHOICE (2u)
+#define VEHICLE_HIL_ACTUATOR_COMMAND_OVERRIDE_REASON_PLANNER_STALE_CHOICE (3u)
+#define VEHICLE_HIL_ACTUATOR_COMMAND_OVERRIDE_REASON_DEGRADED_CHOICE (4u)
+
 /* Frame Names. */
 #define VEHICLE_HIL_VEHICLE_STATE_NAME "VehicleState"
+#define VEHICLE_HIL_WHEEL_SPEED_NAME "WheelSpeed"
+#define VEHICLE_HIL_IMU_DATA_NAME "ImuData"
+#define VEHICLE_HIL_OBSTACLE_DATA_NAME "ObstacleData"
+#define VEHICLE_HIL_SENSOR_HEALTH_NAME "SensorHealth"
+#define VEHICLE_HIL_DRIVE_REQUEST_NAME "DriveRequest"
 #define VEHICLE_HIL_SAFETY_COMMAND_NAME "SafetyCommand"
+#define VEHICLE_HIL_ECU_STATUS_NAME "EcuStatus"
+#define VEHICLE_HIL_ACTUATOR_COMMAND_NAME "ActuatorCommand"
+#define VEHICLE_HIL_ECU_DIAGNOSTICS_NAME "EcuDiagnostics"
 
 /* Signal Names. */
 #define VEHICLE_HIL_VEHICLE_STATE_VEHICLE_SPEED_MPS_NAME "vehicle_speed_mps"
 #define VEHICLE_HIL_VEHICLE_STATE_LONGITUDINAL_ACCEL_MPS2_NAME "longitudinal_accel_mps2"
-#define VEHICLE_HIL_VEHICLE_STATE_STEERING_ANGLE_DEG_NAME "steering_angle_deg"
+#define VEHICLE_HIL_VEHICLE_STATE_STEERING_ANGLE_RAD_NAME "steering_angle_rad"
 #define VEHICLE_HIL_VEHICLE_STATE_GEAR_STATE_NAME "gear_state"
 #define VEHICLE_HIL_VEHICLE_STATE_ALIVE_COUNTER_NAME "alive_counter"
 #define VEHICLE_HIL_VEHICLE_STATE_CRC8_NAME "crc8"
-#define VEHICLE_HIL_SAFETY_COMMAND_BRAKE_REQUEST_PERCENT_NAME "brake_request_percent"
+#define VEHICLE_HIL_WHEEL_SPEED_WHEEL_FL_MPS_NAME "wheel_fl_mps"
+#define VEHICLE_HIL_WHEEL_SPEED_WHEEL_FR_MPS_NAME "wheel_fr_mps"
+#define VEHICLE_HIL_WHEEL_SPEED_WHEEL_RL_MPS_NAME "wheel_rl_mps"
+#define VEHICLE_HIL_WHEEL_SPEED_WHEEL_RR_MPS_NAME "wheel_rr_mps"
+#define VEHICLE_HIL_WHEEL_SPEED_ALIVE_COUNTER_NAME "alive_counter"
+#define VEHICLE_HIL_WHEEL_SPEED_CRC8_NAME "crc8"
+#define VEHICLE_HIL_IMU_DATA_ACCEL_X_MPS2_NAME "accel_x_mps2"
+#define VEHICLE_HIL_IMU_DATA_ACCEL_Y_MPS2_NAME "accel_y_mps2"
+#define VEHICLE_HIL_IMU_DATA_YAW_RATE_RADPS_NAME "yaw_rate_radps"
+#define VEHICLE_HIL_IMU_DATA_IMU_VALID_NAME "imu_valid"
+#define VEHICLE_HIL_IMU_DATA_ALIVE_COUNTER_NAME "alive_counter"
+#define VEHICLE_HIL_IMU_DATA_CRC8_NAME "crc8"
+#define VEHICLE_HIL_OBSTACLE_DATA_DISTANCE_M_NAME "distance_m"
+#define VEHICLE_HIL_OBSTACLE_DATA_CLOSING_SPEED_MPS_NAME "closing_speed_mps"
+#define VEHICLE_HIL_OBSTACLE_DATA_CONFIDENCE_PCT_NAME "confidence_pct"
+#define VEHICLE_HIL_OBSTACLE_DATA_PEDESTRIAN_DETECTED_NAME "pedestrian_detected"
+#define VEHICLE_HIL_OBSTACLE_DATA_RADAR_VALID_NAME "radar_valid"
+#define VEHICLE_HIL_OBSTACLE_DATA_ALIVE_COUNTER_NAME "alive_counter"
+#define VEHICLE_HIL_OBSTACLE_DATA_CRC8_NAME "crc8"
+#define VEHICLE_HIL_SENSOR_HEALTH_WHEEL_VALID_NAME "wheel_valid"
+#define VEHICLE_HIL_SENSOR_HEALTH_IMU_VALID_NAME "imu_valid"
+#define VEHICLE_HIL_SENSOR_HEALTH_RADAR_VALID_NAME "radar_valid"
+#define VEHICLE_HIL_SENSOR_HEALTH_LOCALIZATION_VALID_NAME "localization_valid"
+#define VEHICLE_HIL_SENSOR_HEALTH_SIM_FAULT_FLAGS_NAME "sim_fault_flags"
+#define VEHICLE_HIL_SENSOR_HEALTH_ALIVE_COUNTER_NAME "alive_counter"
+#define VEHICLE_HIL_SENSOR_HEALTH_CRC8_NAME "crc8"
+#define VEHICLE_HIL_DRIVE_REQUEST_REQUESTED_ACCEL_MPS2_NAME "requested_accel_mps2"
+#define VEHICLE_HIL_DRIVE_REQUEST_REQUESTED_STEER_RAD_NAME "requested_steer_rad"
+#define VEHICLE_HIL_DRIVE_REQUEST_DRIVER_SOURCE_NAME "driver_source"
+#define VEHICLE_HIL_DRIVE_REQUEST_DRIVER_VALID_NAME "driver_valid"
+#define VEHICLE_HIL_DRIVE_REQUEST_ALIVE_COUNTER_NAME "alive_counter"
+#define VEHICLE_HIL_DRIVE_REQUEST_CRC8_NAME "crc8"
+#define VEHICLE_HIL_SAFETY_COMMAND_BRAKE_REQUEST_PCT_NAME "brake_request_pct"
 #define VEHICLE_HIL_SAFETY_COMMAND_SAFETY_STATE_NAME "safety_state"
 #define VEHICLE_HIL_SAFETY_COMMAND_EMERGENCY_BRAKE_ACTIVE_NAME "emergency_brake_active"
 #define VEHICLE_HIL_SAFETY_COMMAND_FAULT_CODE_NAME "fault_code"
 #define VEHICLE_HIL_SAFETY_COMMAND_ALIVE_COUNTER_NAME "alive_counter"
 #define VEHICLE_HIL_SAFETY_COMMAND_CRC8_NAME "crc8"
+#define VEHICLE_HIL_ECU_STATUS_ACTIVE_FAULT_BITMAP_NAME "active_fault_bitmap"
+#define VEHICLE_HIL_ECU_STATUS_CPU_LOAD_PCT_NAME "cpu_load_pct"
+#define VEHICLE_HIL_ECU_STATUS_ANOMALY_SCORE_NAME "anomaly_score"
+#define VEHICLE_HIL_ECU_STATUS_ALIVE_COUNTER_NAME "alive_counter"
+#define VEHICLE_HIL_ECU_STATUS_CRC8_NAME "crc8"
+#define VEHICLE_HIL_ACTUATOR_COMMAND_COMMANDED_ACCEL_MPS2_NAME "commanded_accel_mps2"
+#define VEHICLE_HIL_ACTUATOR_COMMAND_COMMANDED_STEER_RAD_NAME "commanded_steer_rad"
+#define VEHICLE_HIL_ACTUATOR_COMMAND_OVERRIDE_ACTIVE_NAME "override_active"
+#define VEHICLE_HIL_ACTUATOR_COMMAND_OVERRIDE_REASON_NAME "override_reason"
+#define VEHICLE_HIL_ACTUATOR_COMMAND_ALIVE_COUNTER_NAME "alive_counter"
+#define VEHICLE_HIL_ACTUATOR_COMMAND_CRC8_NAME "crc8"
+#define VEHICLE_HIL_ECU_DIAGNOSTICS_CRC_ERROR_COUNT_NAME "crc_error_count"
+#define VEHICLE_HIL_ECU_DIAGNOSTICS_COUNTER_JUMP_COUNT_NAME "counter_jump_count"
+#define VEHICLE_HIL_ECU_DIAGNOSTICS_REPEAT_COUNT_NAME "repeat_count"
+#define VEHICLE_HIL_ECU_DIAGNOSTICS_RANGE_ERROR_COUNT_NAME "range_error_count"
+#define VEHICLE_HIL_ECU_DIAGNOSTICS_RX_DROP_COUNT_NAME "rx_drop_count"
+#define VEHICLE_HIL_ECU_DIAGNOSTICS_WATCHDOG_RESET_COUNT_NAME "watchdog_reset_count"
+#define VEHICLE_HIL_ECU_DIAGNOSTICS_RESET_REASON_NAME "reset_reason"
+#define VEHICLE_HIL_ECU_DIAGNOSTICS_ALIVE_COUNTER_NAME "alive_counter"
+#define VEHICLE_HIL_ECU_DIAGNOSTICS_CRC8_NAME "crc8"
 
 /**
  * Signals in message VehicleState.
@@ -109,11 +213,11 @@ struct vehicle_hil_vehicle_state_t {
     int16_t longitudinal_accel_mps2;
 
     /**
-     * Range: -2000..2000 (-200..200 deg)
-     * Scale: 0.1
+     * Range: -2000..2000 (-2..2 rad)
+     * Scale: 0.001
      * Offset: 0
      */
-    int16_t steering_angle_deg;
+    int16_t steering_angle_rad;
 
     /**
      * Range: 0..3 (0..3 -)
@@ -121,6 +225,265 @@ struct vehicle_hil_vehicle_state_t {
      * Offset: 0
      */
     uint8_t gear_state;
+
+    /**
+     * Range: 0..15 (0..15 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t alive_counter;
+
+    /**
+     * Range: 0..255 (0..255 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t crc8;
+};
+
+/**
+ * Signals in message WheelSpeed.
+ *
+ * All signal values are as on the CAN bus.
+ */
+struct vehicle_hil_wheel_speed_t {
+    /**
+     * Range: 0..4095 (0..81.9 m/s)
+     * Scale: 0.02
+     * Offset: 0
+     */
+    uint16_t wheel_fl_mps;
+
+    /**
+     * Range: 0..4095 (0..81.9 m/s)
+     * Scale: 0.02
+     * Offset: 0
+     */
+    uint16_t wheel_fr_mps;
+
+    /**
+     * Range: 0..4095 (0..81.9 m/s)
+     * Scale: 0.02
+     * Offset: 0
+     */
+    uint16_t wheel_rl_mps;
+
+    /**
+     * Range: 0..4095 (0..81.9 m/s)
+     * Scale: 0.02
+     * Offset: 0
+     */
+    uint16_t wheel_rr_mps;
+
+    /**
+     * Range: 0..15 (0..15 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t alive_counter;
+
+    /**
+     * Range: 0..255 (0..255 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t crc8;
+};
+
+/**
+ * Signals in message ImuData.
+ *
+ * All signal values are as on the CAN bus.
+ */
+struct vehicle_hil_imu_data_t {
+    /**
+     * Range: -5000..5000 (-50..50 m/s2)
+     * Scale: 0.01
+     * Offset: 0
+     */
+    int16_t accel_x_mps2;
+
+    /**
+     * Range: -5000..5000 (-50..50 m/s2)
+     * Scale: 0.01
+     * Offset: 0
+     */
+    int16_t accel_y_mps2;
+
+    /**
+     * Range: -2000..2000 (-2..2 rad/s)
+     * Scale: 0.001
+     * Offset: 0
+     */
+    int16_t yaw_rate_radps;
+
+    /**
+     * Range: 0..1 (0..1 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t imu_valid;
+
+    /**
+     * Range: 0..15 (0..15 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t alive_counter;
+
+    /**
+     * Range: 0..255 (0..255 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t crc8;
+};
+
+/**
+ * Signals in message ObstacleData.
+ *
+ * All signal values are as on the CAN bus.
+ */
+struct vehicle_hil_obstacle_data_t {
+    /**
+     * Range: 0..30000 (0..300 m)
+     * Scale: 0.01
+     * Offset: 0
+     */
+    uint16_t distance_m;
+
+    /**
+     * Range: -10000..10000 (-100..100 m/s)
+     * Scale: 0.01
+     * Offset: 0
+     */
+    int16_t closing_speed_mps;
+
+    /**
+     * Range: 0..100 (0..100 %)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t confidence_pct;
+
+    /**
+     * Range: 0..1 (0..1 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t pedestrian_detected;
+
+    /**
+     * Range: 0..1 (0..1 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t radar_valid;
+
+    /**
+     * Range: 0..15 (0..15 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t alive_counter;
+
+    /**
+     * Range: 0..255 (0..255 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t crc8;
+};
+
+/**
+ * Signals in message SensorHealth.
+ *
+ * All signal values are as on the CAN bus.
+ */
+struct vehicle_hil_sensor_health_t {
+    /**
+     * Range: 0..1 (0..1 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t wheel_valid;
+
+    /**
+     * Range: 0..1 (0..1 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t imu_valid;
+
+    /**
+     * Range: 0..1 (0..1 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t radar_valid;
+
+    /**
+     * Range: 0..1 (0..1 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t localization_valid;
+
+    /**
+     * Range: 0..65535 (0..65535 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint16_t sim_fault_flags;
+
+    /**
+     * Range: 0..15 (0..15 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t alive_counter;
+
+    /**
+     * Range: 0..255 (0..255 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t crc8;
+};
+
+/**
+ * Signals in message DriveRequest.
+ *
+ * All signal values are as on the CAN bus.
+ */
+struct vehicle_hil_drive_request_t {
+    /**
+     * Range: -1000..1000 (-10..10 m/s2)
+     * Scale: 0.01
+     * Offset: 0
+     */
+    int16_t requested_accel_mps2;
+
+    /**
+     * Range: -2000..2000 (-2..2 rad)
+     * Scale: 0.001
+     * Offset: 0
+     */
+    int16_t requested_steer_rad;
+
+    /**
+     * Range: 0..3 (0..3 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t driver_source;
+
+    /**
+     * Range: 0..1 (0..1 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t driver_valid;
 
     /**
      * Range: 0..15 (0..15 -)
@@ -148,7 +511,7 @@ struct vehicle_hil_safety_command_t {
      * Scale: 1
      * Offset: 0
      */
-    uint8_t brake_request_percent;
+    uint8_t brake_request_pct;
 
     /**
      * Range: 0..3 (0..3 -)
@@ -170,6 +533,167 @@ struct vehicle_hil_safety_command_t {
      * Offset: 0
      */
     uint16_t fault_code;
+
+    /**
+     * Range: 0..15 (0..15 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t alive_counter;
+
+    /**
+     * Range: 0..255 (0..255 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t crc8;
+};
+
+/**
+ * Signals in message EcuStatus.
+ *
+ * All signal values are as on the CAN bus.
+ */
+struct vehicle_hil_ecu_status_t {
+    /**
+     * Range: 0..4294967295 (0..4294967295 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint32_t active_fault_bitmap;
+
+    /**
+     * Range: 0..100 (0..100 %)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t cpu_load_pct;
+
+    /**
+     * Range: 0..100 (0..1 -)
+     * Scale: 0.01
+     * Offset: 0
+     */
+    uint8_t anomaly_score;
+
+    /**
+     * Range: 0..15 (0..15 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t alive_counter;
+
+    /**
+     * Range: 0..255 (0..255 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t crc8;
+};
+
+/**
+ * Signals in message ActuatorCommand.
+ *
+ * All signal values are as on the CAN bus.
+ */
+struct vehicle_hil_actuator_command_t {
+    /**
+     * Range: -1000..1000 (-10..10 m/s2)
+     * Scale: 0.01
+     * Offset: 0
+     */
+    int16_t commanded_accel_mps2;
+
+    /**
+     * Range: -2000..2000 (-2..2 rad)
+     * Scale: 0.001
+     * Offset: 0
+     */
+    int16_t commanded_steer_rad;
+
+    /**
+     * Range: 0..1 (0..1 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t override_active;
+
+    /**
+     * Range: 0..4 (0..4 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t override_reason;
+
+    /**
+     * Range: 0..15 (0..15 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t alive_counter;
+
+    /**
+     * Range: 0..255 (0..255 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t crc8;
+};
+
+/**
+ * Signals in message EcuDiagnostics.
+ *
+ * All signal values are as on the CAN bus.
+ */
+struct vehicle_hil_ecu_diagnostics_t {
+    /**
+     * Range: 0..255 (0..255 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t crc_error_count;
+
+    /**
+     * Range: 0..255 (0..255 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t counter_jump_count;
+
+    /**
+     * Range: 0..255 (0..255 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t repeat_count;
+
+    /**
+     * Range: 0..255 (0..255 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t range_error_count;
+
+    /**
+     * Range: 0..255 (0..255 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t rx_drop_count;
+
+    /**
+     * Range: 0..15 (0..15 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t watchdog_reset_count;
+
+    /**
+     * Range: 0..15 (0..15 -)
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t reset_reason;
 
     /**
      * Range: 0..15 (0..15 -)
@@ -230,7 +754,7 @@ int vehicle_hil_vehicle_state_init(struct vehicle_hil_vehicle_state_t *msg_p);
  *
  * @return Encoded signal.
  */
-uint16_t vehicle_hil_vehicle_state_vehicle_speed_mps_encode(double value);
+uint16_t vehicle_hil_vehicle_state_vehicle_speed_mps_encode(float value);
 
 /**
  * Decode given signal by applying scaling and offset.
@@ -239,7 +763,7 @@ uint16_t vehicle_hil_vehicle_state_vehicle_speed_mps_encode(double value);
  *
  * @return Decoded signal.
  */
-double vehicle_hil_vehicle_state_vehicle_speed_mps_decode(uint16_t value);
+float vehicle_hil_vehicle_state_vehicle_speed_mps_decode(uint16_t value);
 
 /**
  * Check that given signal is in allowed range.
@@ -261,7 +785,7 @@ bool vehicle_hil_vehicle_state_vehicle_speed_mps_is_in_range(uint16_t value);
  *
  * @return true if in range, false otherwise.
  */
-bool vehicle_hil_vehicle_state_vehicle_speed_mps_is_in_phys_range(double value);
+bool vehicle_hil_vehicle_state_vehicle_speed_mps_is_in_phys_range(float value);
 
 /**
  * Encode given signal by applying scaling and offset.
@@ -270,7 +794,7 @@ bool vehicle_hil_vehicle_state_vehicle_speed_mps_is_in_phys_range(double value);
  *
  * @return Encoded signal.
  */
-int16_t vehicle_hil_vehicle_state_longitudinal_accel_mps2_encode(double value);
+int16_t vehicle_hil_vehicle_state_longitudinal_accel_mps2_encode(float value);
 
 /**
  * Decode given signal by applying scaling and offset.
@@ -279,7 +803,7 @@ int16_t vehicle_hil_vehicle_state_longitudinal_accel_mps2_encode(double value);
  *
  * @return Decoded signal.
  */
-double vehicle_hil_vehicle_state_longitudinal_accel_mps2_decode(int16_t value);
+float vehicle_hil_vehicle_state_longitudinal_accel_mps2_decode(int16_t value);
 
 /**
  * Check that given signal is in allowed range.
@@ -301,7 +825,7 @@ bool vehicle_hil_vehicle_state_longitudinal_accel_mps2_is_in_range(int16_t value
  *
  * @return true if in range, false otherwise.
  */
-bool vehicle_hil_vehicle_state_longitudinal_accel_mps2_is_in_phys_range(double value);
+bool vehicle_hil_vehicle_state_longitudinal_accel_mps2_is_in_phys_range(float value);
 
 /**
  * Encode given signal by applying scaling and offset.
@@ -310,7 +834,7 @@ bool vehicle_hil_vehicle_state_longitudinal_accel_mps2_is_in_phys_range(double v
  *
  * @return Encoded signal.
  */
-int16_t vehicle_hil_vehicle_state_steering_angle_deg_encode(double value);
+int16_t vehicle_hil_vehicle_state_steering_angle_rad_encode(float value);
 
 /**
  * Decode given signal by applying scaling and offset.
@@ -319,7 +843,7 @@ int16_t vehicle_hil_vehicle_state_steering_angle_deg_encode(double value);
  *
  * @return Decoded signal.
  */
-double vehicle_hil_vehicle_state_steering_angle_deg_decode(int16_t value);
+float vehicle_hil_vehicle_state_steering_angle_rad_decode(int16_t value);
 
 /**
  * Check that given signal is in allowed range.
@@ -328,7 +852,7 @@ double vehicle_hil_vehicle_state_steering_angle_deg_decode(int16_t value);
  *
  * @return true if in range, false otherwise.
  */
-bool vehicle_hil_vehicle_state_steering_angle_deg_is_in_range(int16_t value);
+bool vehicle_hil_vehicle_state_steering_angle_rad_is_in_range(int16_t value);
 
 /**
  * Check that given physical value is in allowed range before encoding.
@@ -341,7 +865,7 @@ bool vehicle_hil_vehicle_state_steering_angle_deg_is_in_range(int16_t value);
  *
  * @return true if in range, false otherwise.
  */
-bool vehicle_hil_vehicle_state_steering_angle_deg_is_in_phys_range(double value);
+bool vehicle_hil_vehicle_state_steering_angle_rad_is_in_phys_range(float value);
 
 /**
  * Encode given signal by applying scaling and offset.
@@ -350,7 +874,7 @@ bool vehicle_hil_vehicle_state_steering_angle_deg_is_in_phys_range(double value)
  *
  * @return Encoded signal.
  */
-uint8_t vehicle_hil_vehicle_state_gear_state_encode(double value);
+uint8_t vehicle_hil_vehicle_state_gear_state_encode(float value);
 
 /**
  * Decode given signal by applying scaling and offset.
@@ -359,7 +883,7 @@ uint8_t vehicle_hil_vehicle_state_gear_state_encode(double value);
  *
  * @return Decoded signal.
  */
-double vehicle_hil_vehicle_state_gear_state_decode(uint8_t value);
+float vehicle_hil_vehicle_state_gear_state_decode(uint8_t value);
 
 /**
  * Check that given signal is in allowed range.
@@ -381,7 +905,7 @@ bool vehicle_hil_vehicle_state_gear_state_is_in_range(uint8_t value);
  *
  * @return true if in range, false otherwise.
  */
-bool vehicle_hil_vehicle_state_gear_state_is_in_phys_range(double value);
+bool vehicle_hil_vehicle_state_gear_state_is_in_phys_range(float value);
 
 /**
  * Encode given signal by applying scaling and offset.
@@ -390,7 +914,7 @@ bool vehicle_hil_vehicle_state_gear_state_is_in_phys_range(double value);
  *
  * @return Encoded signal.
  */
-uint8_t vehicle_hil_vehicle_state_alive_counter_encode(double value);
+uint8_t vehicle_hil_vehicle_state_alive_counter_encode(float value);
 
 /**
  * Decode given signal by applying scaling and offset.
@@ -399,7 +923,7 @@ uint8_t vehicle_hil_vehicle_state_alive_counter_encode(double value);
  *
  * @return Decoded signal.
  */
-double vehicle_hil_vehicle_state_alive_counter_decode(uint8_t value);
+float vehicle_hil_vehicle_state_alive_counter_decode(uint8_t value);
 
 /**
  * Check that given signal is in allowed range.
@@ -421,7 +945,7 @@ bool vehicle_hil_vehicle_state_alive_counter_is_in_range(uint8_t value);
  *
  * @return true if in range, false otherwise.
  */
-bool vehicle_hil_vehicle_state_alive_counter_is_in_phys_range(double value);
+bool vehicle_hil_vehicle_state_alive_counter_is_in_phys_range(float value);
 
 /**
  * Encode given signal by applying scaling and offset.
@@ -430,7 +954,7 @@ bool vehicle_hil_vehicle_state_alive_counter_is_in_phys_range(double value);
  *
  * @return Encoded signal.
  */
-uint8_t vehicle_hil_vehicle_state_crc8_encode(double value);
+uint8_t vehicle_hil_vehicle_state_crc8_encode(float value);
 
 /**
  * Decode given signal by applying scaling and offset.
@@ -439,7 +963,7 @@ uint8_t vehicle_hil_vehicle_state_crc8_encode(double value);
  *
  * @return Decoded signal.
  */
-double vehicle_hil_vehicle_state_crc8_decode(uint8_t value);
+float vehicle_hil_vehicle_state_crc8_decode(uint8_t value);
 
 /**
  * Check that given signal is in allowed range.
@@ -461,7 +985,1472 @@ bool vehicle_hil_vehicle_state_crc8_is_in_range(uint8_t value);
  *
  * @return true if in range, false otherwise.
  */
-bool vehicle_hil_vehicle_state_crc8_is_in_phys_range(double value);
+bool vehicle_hil_vehicle_state_crc8_is_in_phys_range(float value);
+
+/**
+ * Pack message WheelSpeed.
+ *
+ * @param[out] dst_p Buffer to pack the message into.
+ * @param[in] src_p Data to pack.
+ * @param[in] size Size of dst_p.
+ *
+ * @return Size of packed data, or negative error code.
+ */
+int vehicle_hil_wheel_speed_pack(
+    uint8_t *dst_p,
+    const struct vehicle_hil_wheel_speed_t *src_p,
+    size_t size);
+
+/**
+ * Unpack message WheelSpeed.
+ *
+ * @param[out] dst_p Object to unpack the message into.
+ * @param[in] src_p Message to unpack.
+ * @param[in] size Size of src_p.
+ *
+ * @return zero(0) or negative error code.
+ */
+int vehicle_hil_wheel_speed_unpack(
+    struct vehicle_hil_wheel_speed_t *dst_p,
+    const uint8_t *src_p,
+    size_t size);
+
+/**
+ * Init message fields to default values from WheelSpeed.
+ *
+ * @param[in] msg_p Message to init.
+ *
+ * @return zero(0) on success or (-1) in case of nullptr argument.
+ */
+int vehicle_hil_wheel_speed_init(struct vehicle_hil_wheel_speed_t *msg_p);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint16_t vehicle_hil_wheel_speed_wheel_fl_mps_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_wheel_speed_wheel_fl_mps_decode(uint16_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_wheel_speed_wheel_fl_mps_is_in_range(uint16_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_wheel_speed_wheel_fl_mps_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint16_t vehicle_hil_wheel_speed_wheel_fr_mps_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_wheel_speed_wheel_fr_mps_decode(uint16_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_wheel_speed_wheel_fr_mps_is_in_range(uint16_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_wheel_speed_wheel_fr_mps_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint16_t vehicle_hil_wheel_speed_wheel_rl_mps_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_wheel_speed_wheel_rl_mps_decode(uint16_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_wheel_speed_wheel_rl_mps_is_in_range(uint16_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_wheel_speed_wheel_rl_mps_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint16_t vehicle_hil_wheel_speed_wheel_rr_mps_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_wheel_speed_wheel_rr_mps_decode(uint16_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_wheel_speed_wheel_rr_mps_is_in_range(uint16_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_wheel_speed_wheel_rr_mps_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_wheel_speed_alive_counter_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_wheel_speed_alive_counter_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_wheel_speed_alive_counter_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_wheel_speed_alive_counter_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_wheel_speed_crc8_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_wheel_speed_crc8_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_wheel_speed_crc8_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_wheel_speed_crc8_is_in_phys_range(float value);
+
+/**
+ * Pack message ImuData.
+ *
+ * @param[out] dst_p Buffer to pack the message into.
+ * @param[in] src_p Data to pack.
+ * @param[in] size Size of dst_p.
+ *
+ * @return Size of packed data, or negative error code.
+ */
+int vehicle_hil_imu_data_pack(
+    uint8_t *dst_p,
+    const struct vehicle_hil_imu_data_t *src_p,
+    size_t size);
+
+/**
+ * Unpack message ImuData.
+ *
+ * @param[out] dst_p Object to unpack the message into.
+ * @param[in] src_p Message to unpack.
+ * @param[in] size Size of src_p.
+ *
+ * @return zero(0) or negative error code.
+ */
+int vehicle_hil_imu_data_unpack(
+    struct vehicle_hil_imu_data_t *dst_p,
+    const uint8_t *src_p,
+    size_t size);
+
+/**
+ * Init message fields to default values from ImuData.
+ *
+ * @param[in] msg_p Message to init.
+ *
+ * @return zero(0) on success or (-1) in case of nullptr argument.
+ */
+int vehicle_hil_imu_data_init(struct vehicle_hil_imu_data_t *msg_p);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+int16_t vehicle_hil_imu_data_accel_x_mps2_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_imu_data_accel_x_mps2_decode(int16_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_imu_data_accel_x_mps2_is_in_range(int16_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_imu_data_accel_x_mps2_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+int16_t vehicle_hil_imu_data_accel_y_mps2_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_imu_data_accel_y_mps2_decode(int16_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_imu_data_accel_y_mps2_is_in_range(int16_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_imu_data_accel_y_mps2_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+int16_t vehicle_hil_imu_data_yaw_rate_radps_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_imu_data_yaw_rate_radps_decode(int16_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_imu_data_yaw_rate_radps_is_in_range(int16_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_imu_data_yaw_rate_radps_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_imu_data_imu_valid_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_imu_data_imu_valid_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_imu_data_imu_valid_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_imu_data_imu_valid_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_imu_data_alive_counter_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_imu_data_alive_counter_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_imu_data_alive_counter_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_imu_data_alive_counter_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_imu_data_crc8_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_imu_data_crc8_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_imu_data_crc8_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_imu_data_crc8_is_in_phys_range(float value);
+
+/**
+ * Pack message ObstacleData.
+ *
+ * @param[out] dst_p Buffer to pack the message into.
+ * @param[in] src_p Data to pack.
+ * @param[in] size Size of dst_p.
+ *
+ * @return Size of packed data, or negative error code.
+ */
+int vehicle_hil_obstacle_data_pack(
+    uint8_t *dst_p,
+    const struct vehicle_hil_obstacle_data_t *src_p,
+    size_t size);
+
+/**
+ * Unpack message ObstacleData.
+ *
+ * @param[out] dst_p Object to unpack the message into.
+ * @param[in] src_p Message to unpack.
+ * @param[in] size Size of src_p.
+ *
+ * @return zero(0) or negative error code.
+ */
+int vehicle_hil_obstacle_data_unpack(
+    struct vehicle_hil_obstacle_data_t *dst_p,
+    const uint8_t *src_p,
+    size_t size);
+
+/**
+ * Init message fields to default values from ObstacleData.
+ *
+ * @param[in] msg_p Message to init.
+ *
+ * @return zero(0) on success or (-1) in case of nullptr argument.
+ */
+int vehicle_hil_obstacle_data_init(struct vehicle_hil_obstacle_data_t *msg_p);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint16_t vehicle_hil_obstacle_data_distance_m_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_obstacle_data_distance_m_decode(uint16_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_obstacle_data_distance_m_is_in_range(uint16_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_obstacle_data_distance_m_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+int16_t vehicle_hil_obstacle_data_closing_speed_mps_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_obstacle_data_closing_speed_mps_decode(int16_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_obstacle_data_closing_speed_mps_is_in_range(int16_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_obstacle_data_closing_speed_mps_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_obstacle_data_confidence_pct_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_obstacle_data_confidence_pct_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_obstacle_data_confidence_pct_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_obstacle_data_confidence_pct_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_obstacle_data_pedestrian_detected_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_obstacle_data_pedestrian_detected_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_obstacle_data_pedestrian_detected_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_obstacle_data_pedestrian_detected_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_obstacle_data_radar_valid_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_obstacle_data_radar_valid_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_obstacle_data_radar_valid_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_obstacle_data_radar_valid_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_obstacle_data_alive_counter_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_obstacle_data_alive_counter_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_obstacle_data_alive_counter_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_obstacle_data_alive_counter_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_obstacle_data_crc8_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_obstacle_data_crc8_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_obstacle_data_crc8_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_obstacle_data_crc8_is_in_phys_range(float value);
+
+/**
+ * Pack message SensorHealth.
+ *
+ * @param[out] dst_p Buffer to pack the message into.
+ * @param[in] src_p Data to pack.
+ * @param[in] size Size of dst_p.
+ *
+ * @return Size of packed data, or negative error code.
+ */
+int vehicle_hil_sensor_health_pack(
+    uint8_t *dst_p,
+    const struct vehicle_hil_sensor_health_t *src_p,
+    size_t size);
+
+/**
+ * Unpack message SensorHealth.
+ *
+ * @param[out] dst_p Object to unpack the message into.
+ * @param[in] src_p Message to unpack.
+ * @param[in] size Size of src_p.
+ *
+ * @return zero(0) or negative error code.
+ */
+int vehicle_hil_sensor_health_unpack(
+    struct vehicle_hil_sensor_health_t *dst_p,
+    const uint8_t *src_p,
+    size_t size);
+
+/**
+ * Init message fields to default values from SensorHealth.
+ *
+ * @param[in] msg_p Message to init.
+ *
+ * @return zero(0) on success or (-1) in case of nullptr argument.
+ */
+int vehicle_hil_sensor_health_init(struct vehicle_hil_sensor_health_t *msg_p);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_sensor_health_wheel_valid_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_sensor_health_wheel_valid_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_sensor_health_wheel_valid_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_sensor_health_wheel_valid_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_sensor_health_imu_valid_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_sensor_health_imu_valid_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_sensor_health_imu_valid_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_sensor_health_imu_valid_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_sensor_health_radar_valid_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_sensor_health_radar_valid_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_sensor_health_radar_valid_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_sensor_health_radar_valid_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_sensor_health_localization_valid_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_sensor_health_localization_valid_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_sensor_health_localization_valid_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_sensor_health_localization_valid_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint16_t vehicle_hil_sensor_health_sim_fault_flags_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_sensor_health_sim_fault_flags_decode(uint16_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_sensor_health_sim_fault_flags_is_in_range(uint16_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_sensor_health_sim_fault_flags_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_sensor_health_alive_counter_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_sensor_health_alive_counter_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_sensor_health_alive_counter_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_sensor_health_alive_counter_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_sensor_health_crc8_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_sensor_health_crc8_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_sensor_health_crc8_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_sensor_health_crc8_is_in_phys_range(float value);
+
+/**
+ * Pack message DriveRequest.
+ *
+ * @param[out] dst_p Buffer to pack the message into.
+ * @param[in] src_p Data to pack.
+ * @param[in] size Size of dst_p.
+ *
+ * @return Size of packed data, or negative error code.
+ */
+int vehicle_hil_drive_request_pack(
+    uint8_t *dst_p,
+    const struct vehicle_hil_drive_request_t *src_p,
+    size_t size);
+
+/**
+ * Unpack message DriveRequest.
+ *
+ * @param[out] dst_p Object to unpack the message into.
+ * @param[in] src_p Message to unpack.
+ * @param[in] size Size of src_p.
+ *
+ * @return zero(0) or negative error code.
+ */
+int vehicle_hil_drive_request_unpack(
+    struct vehicle_hil_drive_request_t *dst_p,
+    const uint8_t *src_p,
+    size_t size);
+
+/**
+ * Init message fields to default values from DriveRequest.
+ *
+ * @param[in] msg_p Message to init.
+ *
+ * @return zero(0) on success or (-1) in case of nullptr argument.
+ */
+int vehicle_hil_drive_request_init(struct vehicle_hil_drive_request_t *msg_p);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+int16_t vehicle_hil_drive_request_requested_accel_mps2_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_drive_request_requested_accel_mps2_decode(int16_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_drive_request_requested_accel_mps2_is_in_range(int16_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_drive_request_requested_accel_mps2_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+int16_t vehicle_hil_drive_request_requested_steer_rad_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_drive_request_requested_steer_rad_decode(int16_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_drive_request_requested_steer_rad_is_in_range(int16_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_drive_request_requested_steer_rad_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_drive_request_driver_source_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_drive_request_driver_source_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_drive_request_driver_source_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_drive_request_driver_source_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_drive_request_driver_valid_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_drive_request_driver_valid_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_drive_request_driver_valid_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_drive_request_driver_valid_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_drive_request_alive_counter_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_drive_request_alive_counter_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_drive_request_alive_counter_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_drive_request_alive_counter_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_drive_request_crc8_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_drive_request_crc8_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_drive_request_crc8_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_drive_request_crc8_is_in_phys_range(float value);
 
 /**
  * Pack message SafetyCommand.
@@ -507,7 +2496,7 @@ int vehicle_hil_safety_command_init(struct vehicle_hil_safety_command_t *msg_p);
  *
  * @return Encoded signal.
  */
-uint8_t vehicle_hil_safety_command_brake_request_percent_encode(double value);
+uint8_t vehicle_hil_safety_command_brake_request_pct_encode(float value);
 
 /**
  * Decode given signal by applying scaling and offset.
@@ -516,7 +2505,7 @@ uint8_t vehicle_hil_safety_command_brake_request_percent_encode(double value);
  *
  * @return Decoded signal.
  */
-double vehicle_hil_safety_command_brake_request_percent_decode(uint8_t value);
+float vehicle_hil_safety_command_brake_request_pct_decode(uint8_t value);
 
 /**
  * Check that given signal is in allowed range.
@@ -525,7 +2514,7 @@ double vehicle_hil_safety_command_brake_request_percent_decode(uint8_t value);
  *
  * @return true if in range, false otherwise.
  */
-bool vehicle_hil_safety_command_brake_request_percent_is_in_range(uint8_t value);
+bool vehicle_hil_safety_command_brake_request_pct_is_in_range(uint8_t value);
 
 /**
  * Check that given physical value is in allowed range before encoding.
@@ -538,7 +2527,7 @@ bool vehicle_hil_safety_command_brake_request_percent_is_in_range(uint8_t value)
  *
  * @return true if in range, false otherwise.
  */
-bool vehicle_hil_safety_command_brake_request_percent_is_in_phys_range(double value);
+bool vehicle_hil_safety_command_brake_request_pct_is_in_phys_range(float value);
 
 /**
  * Encode given signal by applying scaling and offset.
@@ -547,7 +2536,7 @@ bool vehicle_hil_safety_command_brake_request_percent_is_in_phys_range(double va
  *
  * @return Encoded signal.
  */
-uint8_t vehicle_hil_safety_command_safety_state_encode(double value);
+uint8_t vehicle_hil_safety_command_safety_state_encode(float value);
 
 /**
  * Decode given signal by applying scaling and offset.
@@ -556,7 +2545,7 @@ uint8_t vehicle_hil_safety_command_safety_state_encode(double value);
  *
  * @return Decoded signal.
  */
-double vehicle_hil_safety_command_safety_state_decode(uint8_t value);
+float vehicle_hil_safety_command_safety_state_decode(uint8_t value);
 
 /**
  * Check that given signal is in allowed range.
@@ -578,7 +2567,7 @@ bool vehicle_hil_safety_command_safety_state_is_in_range(uint8_t value);
  *
  * @return true if in range, false otherwise.
  */
-bool vehicle_hil_safety_command_safety_state_is_in_phys_range(double value);
+bool vehicle_hil_safety_command_safety_state_is_in_phys_range(float value);
 
 /**
  * Encode given signal by applying scaling and offset.
@@ -587,7 +2576,7 @@ bool vehicle_hil_safety_command_safety_state_is_in_phys_range(double value);
  *
  * @return Encoded signal.
  */
-uint8_t vehicle_hil_safety_command_emergency_brake_active_encode(double value);
+uint8_t vehicle_hil_safety_command_emergency_brake_active_encode(float value);
 
 /**
  * Decode given signal by applying scaling and offset.
@@ -596,7 +2585,7 @@ uint8_t vehicle_hil_safety_command_emergency_brake_active_encode(double value);
  *
  * @return Decoded signal.
  */
-double vehicle_hil_safety_command_emergency_brake_active_decode(uint8_t value);
+float vehicle_hil_safety_command_emergency_brake_active_decode(uint8_t value);
 
 /**
  * Check that given signal is in allowed range.
@@ -618,7 +2607,7 @@ bool vehicle_hil_safety_command_emergency_brake_active_is_in_range(uint8_t value
  *
  * @return true if in range, false otherwise.
  */
-bool vehicle_hil_safety_command_emergency_brake_active_is_in_phys_range(double value);
+bool vehicle_hil_safety_command_emergency_brake_active_is_in_phys_range(float value);
 
 /**
  * Encode given signal by applying scaling and offset.
@@ -627,7 +2616,7 @@ bool vehicle_hil_safety_command_emergency_brake_active_is_in_phys_range(double v
  *
  * @return Encoded signal.
  */
-uint16_t vehicle_hil_safety_command_fault_code_encode(double value);
+uint16_t vehicle_hil_safety_command_fault_code_encode(float value);
 
 /**
  * Decode given signal by applying scaling and offset.
@@ -636,7 +2625,7 @@ uint16_t vehicle_hil_safety_command_fault_code_encode(double value);
  *
  * @return Decoded signal.
  */
-double vehicle_hil_safety_command_fault_code_decode(uint16_t value);
+float vehicle_hil_safety_command_fault_code_decode(uint16_t value);
 
 /**
  * Check that given signal is in allowed range.
@@ -658,7 +2647,7 @@ bool vehicle_hil_safety_command_fault_code_is_in_range(uint16_t value);
  *
  * @return true if in range, false otherwise.
  */
-bool vehicle_hil_safety_command_fault_code_is_in_phys_range(double value);
+bool vehicle_hil_safety_command_fault_code_is_in_phys_range(float value);
 
 /**
  * Encode given signal by applying scaling and offset.
@@ -667,7 +2656,7 @@ bool vehicle_hil_safety_command_fault_code_is_in_phys_range(double value);
  *
  * @return Encoded signal.
  */
-uint8_t vehicle_hil_safety_command_alive_counter_encode(double value);
+uint8_t vehicle_hil_safety_command_alive_counter_encode(float value);
 
 /**
  * Decode given signal by applying scaling and offset.
@@ -676,7 +2665,7 @@ uint8_t vehicle_hil_safety_command_alive_counter_encode(double value);
  *
  * @return Decoded signal.
  */
-double vehicle_hil_safety_command_alive_counter_decode(uint8_t value);
+float vehicle_hil_safety_command_alive_counter_decode(uint8_t value);
 
 /**
  * Check that given signal is in allowed range.
@@ -698,7 +2687,7 @@ bool vehicle_hil_safety_command_alive_counter_is_in_range(uint8_t value);
  *
  * @return true if in range, false otherwise.
  */
-bool vehicle_hil_safety_command_alive_counter_is_in_phys_range(double value);
+bool vehicle_hil_safety_command_alive_counter_is_in_phys_range(float value);
 
 /**
  * Encode given signal by applying scaling and offset.
@@ -707,7 +2696,7 @@ bool vehicle_hil_safety_command_alive_counter_is_in_phys_range(double value);
  *
  * @return Encoded signal.
  */
-uint8_t vehicle_hil_safety_command_crc8_encode(double value);
+uint8_t vehicle_hil_safety_command_crc8_encode(float value);
 
 /**
  * Decode given signal by applying scaling and offset.
@@ -716,7 +2705,7 @@ uint8_t vehicle_hil_safety_command_crc8_encode(double value);
  *
  * @return Decoded signal.
  */
-double vehicle_hil_safety_command_crc8_decode(uint8_t value);
+float vehicle_hil_safety_command_crc8_decode(uint8_t value);
 
 /**
  * Check that given signal is in allowed range.
@@ -738,7 +2727,918 @@ bool vehicle_hil_safety_command_crc8_is_in_range(uint8_t value);
  *
  * @return true if in range, false otherwise.
  */
-bool vehicle_hil_safety_command_crc8_is_in_phys_range(double value);
+bool vehicle_hil_safety_command_crc8_is_in_phys_range(float value);
+
+/**
+ * Pack message EcuStatus.
+ *
+ * @param[out] dst_p Buffer to pack the message into.
+ * @param[in] src_p Data to pack.
+ * @param[in] size Size of dst_p.
+ *
+ * @return Size of packed data, or negative error code.
+ */
+int vehicle_hil_ecu_status_pack(
+    uint8_t *dst_p,
+    const struct vehicle_hil_ecu_status_t *src_p,
+    size_t size);
+
+/**
+ * Unpack message EcuStatus.
+ *
+ * @param[out] dst_p Object to unpack the message into.
+ * @param[in] src_p Message to unpack.
+ * @param[in] size Size of src_p.
+ *
+ * @return zero(0) or negative error code.
+ */
+int vehicle_hil_ecu_status_unpack(
+    struct vehicle_hil_ecu_status_t *dst_p,
+    const uint8_t *src_p,
+    size_t size);
+
+/**
+ * Init message fields to default values from EcuStatus.
+ *
+ * @param[in] msg_p Message to init.
+ *
+ * @return zero(0) on success or (-1) in case of nullptr argument.
+ */
+int vehicle_hil_ecu_status_init(struct vehicle_hil_ecu_status_t *msg_p);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint32_t vehicle_hil_ecu_status_active_fault_bitmap_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_ecu_status_active_fault_bitmap_decode(uint32_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_status_active_fault_bitmap_is_in_range(uint32_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_status_active_fault_bitmap_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_ecu_status_cpu_load_pct_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_ecu_status_cpu_load_pct_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_status_cpu_load_pct_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_status_cpu_load_pct_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_ecu_status_anomaly_score_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_ecu_status_anomaly_score_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_status_anomaly_score_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_status_anomaly_score_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_ecu_status_alive_counter_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_ecu_status_alive_counter_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_status_alive_counter_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_status_alive_counter_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_ecu_status_crc8_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_ecu_status_crc8_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_status_crc8_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_status_crc8_is_in_phys_range(float value);
+
+/**
+ * Pack message ActuatorCommand.
+ *
+ * @param[out] dst_p Buffer to pack the message into.
+ * @param[in] src_p Data to pack.
+ * @param[in] size Size of dst_p.
+ *
+ * @return Size of packed data, or negative error code.
+ */
+int vehicle_hil_actuator_command_pack(
+    uint8_t *dst_p,
+    const struct vehicle_hil_actuator_command_t *src_p,
+    size_t size);
+
+/**
+ * Unpack message ActuatorCommand.
+ *
+ * @param[out] dst_p Object to unpack the message into.
+ * @param[in] src_p Message to unpack.
+ * @param[in] size Size of src_p.
+ *
+ * @return zero(0) or negative error code.
+ */
+int vehicle_hil_actuator_command_unpack(
+    struct vehicle_hil_actuator_command_t *dst_p,
+    const uint8_t *src_p,
+    size_t size);
+
+/**
+ * Init message fields to default values from ActuatorCommand.
+ *
+ * @param[in] msg_p Message to init.
+ *
+ * @return zero(0) on success or (-1) in case of nullptr argument.
+ */
+int vehicle_hil_actuator_command_init(struct vehicle_hil_actuator_command_t *msg_p);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+int16_t vehicle_hil_actuator_command_commanded_accel_mps2_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_actuator_command_commanded_accel_mps2_decode(int16_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_actuator_command_commanded_accel_mps2_is_in_range(int16_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_actuator_command_commanded_accel_mps2_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+int16_t vehicle_hil_actuator_command_commanded_steer_rad_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_actuator_command_commanded_steer_rad_decode(int16_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_actuator_command_commanded_steer_rad_is_in_range(int16_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_actuator_command_commanded_steer_rad_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_actuator_command_override_active_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_actuator_command_override_active_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_actuator_command_override_active_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_actuator_command_override_active_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_actuator_command_override_reason_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_actuator_command_override_reason_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_actuator_command_override_reason_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_actuator_command_override_reason_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_actuator_command_alive_counter_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_actuator_command_alive_counter_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_actuator_command_alive_counter_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_actuator_command_alive_counter_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_actuator_command_crc8_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_actuator_command_crc8_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_actuator_command_crc8_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_actuator_command_crc8_is_in_phys_range(float value);
+
+/**
+ * Pack message EcuDiagnostics.
+ *
+ * @param[out] dst_p Buffer to pack the message into.
+ * @param[in] src_p Data to pack.
+ * @param[in] size Size of dst_p.
+ *
+ * @return Size of packed data, or negative error code.
+ */
+int vehicle_hil_ecu_diagnostics_pack(
+    uint8_t *dst_p,
+    const struct vehicle_hil_ecu_diagnostics_t *src_p,
+    size_t size);
+
+/**
+ * Unpack message EcuDiagnostics.
+ *
+ * @param[out] dst_p Object to unpack the message into.
+ * @param[in] src_p Message to unpack.
+ * @param[in] size Size of src_p.
+ *
+ * @return zero(0) or negative error code.
+ */
+int vehicle_hil_ecu_diagnostics_unpack(
+    struct vehicle_hil_ecu_diagnostics_t *dst_p,
+    const uint8_t *src_p,
+    size_t size);
+
+/**
+ * Init message fields to default values from EcuDiagnostics.
+ *
+ * @param[in] msg_p Message to init.
+ *
+ * @return zero(0) on success or (-1) in case of nullptr argument.
+ */
+int vehicle_hil_ecu_diagnostics_init(struct vehicle_hil_ecu_diagnostics_t *msg_p);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_ecu_diagnostics_crc_error_count_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_ecu_diagnostics_crc_error_count_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_crc_error_count_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_crc_error_count_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_ecu_diagnostics_counter_jump_count_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_ecu_diagnostics_counter_jump_count_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_counter_jump_count_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_counter_jump_count_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_ecu_diagnostics_repeat_count_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_ecu_diagnostics_repeat_count_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_repeat_count_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_repeat_count_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_ecu_diagnostics_range_error_count_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_ecu_diagnostics_range_error_count_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_range_error_count_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_range_error_count_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_ecu_diagnostics_rx_drop_count_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_ecu_diagnostics_rx_drop_count_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_rx_drop_count_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_rx_drop_count_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_ecu_diagnostics_watchdog_reset_count_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_ecu_diagnostics_watchdog_reset_count_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_watchdog_reset_count_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_watchdog_reset_count_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_ecu_diagnostics_reset_reason_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_ecu_diagnostics_reset_reason_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_reset_reason_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_reset_reason_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_ecu_diagnostics_alive_counter_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_ecu_diagnostics_alive_counter_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_alive_counter_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_alive_counter_is_in_phys_range(float value);
+
+/**
+ * Encode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to encode.
+ *
+ * @return Encoded signal.
+ */
+uint8_t vehicle_hil_ecu_diagnostics_crc8_encode(float value);
+
+/**
+ * Decode given signal by applying scaling and offset.
+ *
+ * @param[in] value Signal to decode.
+ *
+ * @return Decoded signal.
+ */
+float vehicle_hil_ecu_diagnostics_crc8_decode(uint8_t value);
+
+/**
+ * Check that given signal is in allowed range.
+ *
+ * @param[in] value Signal to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_crc8_is_in_range(uint8_t value);
+
+/**
+ * Check that given physical value is in allowed range before encoding.
+ *
+ * Use this BEFORE calling _encode() to avoid silent integer overflow:
+ *   encode(-1.0) on a [0,100] signal wraps to 255 and passes is_in_range().
+ *   is_in_phys_range(-1.0) correctly returns false.
+ *
+ * @param[in] value Physical signal value to check.
+ *
+ * @return true if in range, false otherwise.
+ */
+bool vehicle_hil_ecu_diagnostics_crc8_is_in_phys_range(float value);
 
 
 #ifdef __cplusplus

@@ -9,18 +9,101 @@ BU_: SIM ECU
 BO_ 256 VehicleState: 8 SIM
  SG_ vehicle_speed_mps : 0|16@1+ (0.01,0) [0|655.35] "m/s" ECU
  SG_ longitudinal_accel_mps2 : 16|16@1- (0.01,0) [-50|50] "m/s2" ECU
- SG_ steering_angle_deg : 32|12@1- (0.1,0) [-200|200] "deg" ECU
+ SG_ steering_angle_rad : 32|12@1- (0.001,0) [-2|2] "rad" ECU
  SG_ gear_state : 44|4@1+ (1,0) [0|3] "" ECU
  SG_ alive_counter : 48|4@1+ (1,0) [0|15] "" ECU
  SG_ crc8 : 56|8@1+ (1,0) [0|255] "" ECU
 
+BO_ 257 WheelSpeed: 8 SIM
+ SG_ wheel_fl_mps : 0|12@1+ (0.02,0) [0|81.9] "m/s" ECU
+ SG_ wheel_fr_mps : 12|12@1+ (0.02,0) [0|81.9] "m/s" ECU
+ SG_ wheel_rl_mps : 24|12@1+ (0.02,0) [0|81.9] "m/s" ECU
+ SG_ wheel_rr_mps : 36|12@1+ (0.02,0) [0|81.9] "m/s" ECU
+ SG_ alive_counter : 48|4@1+ (1,0) [0|15] "" ECU
+ SG_ crc8 : 56|8@1+ (1,0) [0|255] "" ECU
+
+BO_ 258 ImuData: 8 SIM
+ SG_ accel_x_mps2 : 0|16@1- (0.01,0) [-50|50] "m/s2" ECU
+ SG_ accel_y_mps2 : 16|16@1- (0.01,0) [-50|50] "m/s2" ECU
+ SG_ yaw_rate_radps : 32|12@1- (0.001,0) [-2|2] "rad/s" ECU
+ SG_ imu_valid : 44|1@1+ (1,0) [0|1] "" ECU
+ SG_ alive_counter : 48|4@1+ (1,0) [0|15] "" ECU
+ SG_ crc8 : 56|8@1+ (1,0) [0|255] "" ECU
+
+BO_ 259 ObstacleData: 8 SIM
+ SG_ distance_m : 0|16@1+ (0.01,0) [0|300] "m" ECU
+ SG_ closing_speed_mps : 16|16@1- (0.01,0) [-100|100] "m/s" ECU
+ SG_ confidence_pct : 32|7@1+ (1,0) [0|100] "%" ECU
+ SG_ pedestrian_detected : 39|1@1+ (1,0) [0|1] "" ECU
+ SG_ radar_valid : 40|1@1+ (1,0) [0|1] "" ECU
+ SG_ alive_counter : 48|4@1+ (1,0) [0|15] "" ECU
+ SG_ crc8 : 56|8@1+ (1,0) [0|255] "" ECU
+
+BO_ 260 SensorHealth: 8 SIM
+ SG_ wheel_valid : 0|1@1+ (1,0) [0|1] "" ECU
+ SG_ imu_valid : 1|1@1+ (1,0) [0|1] "" ECU
+ SG_ radar_valid : 2|1@1+ (1,0) [0|1] "" ECU
+ SG_ localization_valid : 3|1@1+ (1,0) [0|1] "" ECU
+ SG_ sim_fault_flags : 8|16@1+ (1,0) [0|65535] "" ECU
+ SG_ alive_counter : 48|4@1+ (1,0) [0|15] "" ECU
+ SG_ crc8 : 56|8@1+ (1,0) [0|255] "" ECU
+
+BO_ 261 DriveRequest: 8 SIM
+ SG_ requested_accel_mps2 : 0|16@1- (0.01,0) [-10|10] "m/s2" ECU
+ SG_ requested_steer_rad : 16|12@1- (0.001,0) [-2|2] "rad" ECU
+ SG_ driver_source : 28|3@1+ (1,0) [0|3] "" ECU
+ SG_ driver_valid : 31|1@1+ (1,0) [0|1] "" ECU
+ SG_ alive_counter : 48|4@1+ (1,0) [0|15] "" ECU
+ SG_ crc8 : 56|8@1+ (1,0) [0|255] "" ECU
+
 BO_ 512 SafetyCommand: 8 ECU
- SG_ brake_request_percent : 0|8@1+ (1,0) [0|100] "%" SIM
+ SG_ brake_request_pct : 0|8@1+ (1,0) [0|100] "%" SIM
  SG_ safety_state : 8|4@1+ (1,0) [0|3] "" SIM
  SG_ emergency_brake_active : 12|1@1+ (1,0) [0|1] "" SIM
  SG_ fault_code : 16|16@1+ (1,0) [0|65535] "" SIM
  SG_ alive_counter : 48|4@1+ (1,0) [0|15] "" SIM
  SG_ crc8 : 56|8@1+ (1,0) [0|255] "" SIM
 
+BO_ 513 EcuStatus: 8 ECU
+ SG_ active_fault_bitmap : 0|32@1+ (1,0) [0|4294967295] "" SIM
+ SG_ cpu_load_pct : 32|7@1+ (1,0) [0|100] "%" SIM
+ SG_ anomaly_score : 39|7@1+ (0.01,0) [0|1] "" SIM
+ SG_ alive_counter : 48|4@1+ (1,0) [0|15] "" SIM
+ SG_ crc8 : 56|8@1+ (1,0) [0|255] "" SIM
+
+BO_ 514 ActuatorCommand: 8 ECU
+ SG_ commanded_accel_mps2 : 0|16@1- (0.01,0) [-10|10] "m/s2" SIM
+ SG_ commanded_steer_rad : 16|12@1- (0.001,0) [-2|2] "rad" SIM
+ SG_ override_active : 28|1@1+ (1,0) [0|1] "" SIM
+ SG_ override_reason : 29|3@1+ (1,0) [0|4] "" SIM
+ SG_ alive_counter : 48|4@1+ (1,0) [0|15] "" SIM
+ SG_ crc8 : 56|8@1+ (1,0) [0|255] "" SIM
+
+BO_ 515 EcuDiagnostics: 8 ECU
+ SG_ crc_error_count : 0|8@1+ (1,0) [0|255] "" SIM
+ SG_ counter_jump_count : 8|8@1+ (1,0) [0|255] "" SIM
+ SG_ repeat_count : 16|8@1+ (1,0) [0|255] "" SIM
+ SG_ range_error_count : 24|8@1+ (1,0) [0|255] "" SIM
+ SG_ rx_drop_count : 32|8@1+ (1,0) [0|255] "" SIM
+ SG_ watchdog_reset_count : 40|4@1+ (1,0) [0|15] "" SIM
+ SG_ reset_reason : 44|4@1+ (1,0) [0|15] "" SIM
+ SG_ alive_counter : 48|4@1+ (1,0) [0|15] "" SIM
+ SG_ crc8 : 56|8@1+ (1,0) [0|255] "" SIM
+
+BA_DEF_ BO_ "GenMsgCycleTime" INT 0 65535;
+BA_DEF_DEF_ "GenMsgCycleTime" 0;
+BA_ "GenMsgCycleTime" BO_ 256 20;
+BA_ "GenMsgCycleTime" BO_ 257 10;
+BA_ "GenMsgCycleTime" BO_ 258 10;
+BA_ "GenMsgCycleTime" BO_ 259 20;
+BA_ "GenMsgCycleTime" BO_ 260 100;
+BA_ "GenMsgCycleTime" BO_ 261 20;
+BA_ "GenMsgCycleTime" BO_ 512 20;
+BA_ "GenMsgCycleTime" BO_ 513 100;
+BA_ "GenMsgCycleTime" BO_ 514 20;
+BA_ "GenMsgCycleTime" BO_ 515 1000;
+
 VAL_ 256 gear_state 0 "PARK" 1 "REVERSE" 2 "NEUTRAL" 3 "DRIVE" ;
+VAL_ 261 driver_source 0 "SCRIPTED" 1 "CLASSIC" 2 "LEARNED" 3 "HUMAN" ;
 VAL_ 512 safety_state 0 "NORMAL" 1 "WARNING" 2 "DEGRADED" 3 "EMERGENCY_BRAKE" ;
+VAL_ 514 override_reason 0 "NONE" 1 "LIMIT" 2 "SAFETY_BRAKE" 3 "PLANNER_STALE" 4 "DEGRADED" ;
