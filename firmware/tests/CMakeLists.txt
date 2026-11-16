@@ -31,6 +31,12 @@ target_compile_options(test_core PRIVATE ${STRICT_FLAGS})
 target_link_libraries(test_core PRIVATE unity)
 add_test(NAME test_core COMMAND test_core)
 
+add_executable(test_e2e test_e2e.c ${APP_DIR}/e2e.c)
+target_include_directories(test_e2e PRIVATE ${APP_DIR})
+target_compile_options(test_e2e PRIVATE ${STRICT_FLAGS})
+target_link_libraries(test_e2e PRIVATE unity)
+add_test(NAME test_e2e COMMAND test_e2e)
+
 add_executable(test_codec test_codec.c ${GENERATED_DIR}/vehicle_hil.c)
 target_include_directories(test_codec PRIVATE ${GENERATED_DIR})
 target_compile_options(test_codec PRIVATE -Wall -Wextra -Werror)
