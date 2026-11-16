@@ -6,7 +6,7 @@
 #define E2E_CRC_FINAL_XOR 0xFFU
 #define E2E_CRC_DATA_BYTES 7U
 
-/* e2e_crc_add adds length bytes to a running CRC, one bit at a time. The two CRC functions use it. */
+/* e2e_crc_add adds bytes to a running CRC, one bit at a time. The two CRC functions use it. */
 static uint8_t e2e_crc_add(uint8_t crc, const uint8_t *bytes, uint32_t length)
 {
     for (uint32_t i = 0U; i < length; i++) {

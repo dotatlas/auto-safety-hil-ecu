@@ -1,4 +1,4 @@
-/* FreeRTOS settings for the STM32G474 (Cortex-M4F, 170 MHz). FreeRTOS reads this file at build time. */
+/* FreeRTOS settings for the STM32G474 (Cortex-M4F, 170 MHz), read by the kernel at build time. */
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
